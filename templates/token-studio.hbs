@@ -1,0 +1,342 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+    <!-- Header -->
+    <header class="app-header">
+        <h1><i class="fas fa-user-circle"></i> Token Studio</h1>
+        <div class="header-actions">
+            <button type="button" data-action="undo" title="Undo Last Step">
+                <i class="fas fa-undo"></i>
+            </button>
+            <button type="button" data-action="saveAvatar" title="Update Avatar">
+                <i class="fas fa-user-circle"></i> Save Avatar
+            </button>
+            <button type="button" data-action="saveToken" title="Update Token">
+                 <i class="fas fa-chess-pawn"></i> Save Token
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Layout Application Body -->
+    <div class="studio-body">
+        
+        <!-- Left Column: Preview Stage -->
+        <div class="preview-stage" id="quick-token-drop-zone">
+            
+            <!-- Empty State Overlay -->
+            {{#unless hasSourceImage}}
+            <div class="empty-state">
+                <div class="drop-message">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drag & Drop Image Here</p>
+                    <p class="or-divider">- OR -</p>
+                    <button type="button" class="btn-main" data-action="pickSource">
+                        <i class="fas fa-folder-open"></i> Select Image
+                    </button>
+                </div>
+            </div>
+            {{/unless}}
+            
+            <!-- View Switcher (Top) -->
+            <div class="view-controls">
+                <div class="view-toggle">
+                    <button type="button" class="{{#if isAvatarActive}}active{{/if}}" data-action="setView" data-view="avatar">
+                        <i class="fas fa-portrait"></i> Avatar
+                    </button>
+                    <button type="button" class="{{#if isTokenActive}}active{{/if}}" data-action="setView" data-view="token">
+                        <i class="fas fa-user-circle"></i> Token
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Canvas Stage -->
+            <div class="canvas-stage">
+                
+                <!-- Avatar Canvas -->
+                <div class="canvas-container {{#unless isAvatarActive}}hidden{{/unless}}" id="container-avatar">
+                     <canvas id="canvas-avatar"></canvas>
+                </div>
+
+                <!-- Token Canvas -->
+                <div class="canvas-container {{#unless isTokenActive}}hidden{{/unless}}" id="container-token">
+                     <canvas id="canvas-token"></canvas>
+                </div>
+
+                <!-- Floating Auto-Fit -->
+                <button type="button" class="floating-btn" data-action="autoFit" title="Auto-Fit Image">
+                    <i class="fas fa-compress-arrows-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Right Column: Controls -->
+        <div class="controls-column">
+            
+            <!-- Controls (Tabbed) -->
+            <nav class="tabs-nav">
+                <a class="item {{#if isTabTransform}}active{{/if}}" data-tab="transform"><i class="fas fa-sliders-h"></i> Edit</a>
+                <a class="item {{#if isTabStyle}}active{{/if}}" data-tab="style"><i class="fas fa-paint-brush"></i> Style</a>
+            </nav>
+
+            <section class="tab-content">
+                
+                    <!-- Transform Controls (Magic Slots) -->
+                    <div class="tab {{#if isTabTransform}}active{{/if}}" data-tab="transform">
+                        
+                        {{#if isTokenActive}}
+                        
+
+                        <!-- SLOT 3: FRAME (Top) -->
+                        <div class="slot-group {{#if isFrameLayer}}active-slot{{/if}}">
+                            <div class="slot-header" onclick="this.querySelector('input').click()">
+                                <input type="radio" name="layer" value="frame" data-action="toggle-layer" {{#if isFrameLayer}}checked{{/if}}>
+                                <span><i class="fas fa-border-style"></i> Frame (Top)</span>
+                            </div>
+                            
+                            {{#if isFrameLayer}}
+                            <div class="slot-content">
+                                <div class="control-group">
+                                     <label>Scale <input type="number" class="val-input" data-target="scale" value="{{transforms.scale}}" step="0.05"></label>
+                                     <input type="range" name="scale" min="0.1" max="5" step="0.05" value="{{transforms.scale}}">
+                                </div>
+                                <div class="control-group">
+                                    <label>X Position <input type="number" class="val-input" data-target="x" value="{{transforms.x}}"></label>
+                                    <input type="range" name="x" min="-500" max="500" value="{{transforms.x}}">
+                                </div>
+                                <div class="control-group">
+                                    <label>Y Position <input type="number" class="val-input" data-target="y" value="{{transforms.y}}"></label>
+                                    <input type="range" name="y" min="-500" max="500" value="{{transforms.y}}">
+                                </div>
+                                <div class="control-group">
+                                    <label>Rotation <input type="number" class="val-input" data-target="rotation" value="{{transforms.rotation}}">°</label>
+                                    <input type="range" name="rotation" min="-180" max="180" value="{{transforms.rotation}}">
+                                </div>
+                            </div>
+                            {{/if}}
+                        </div>
+
+                        <!-- SLOT 2: PORTRAIT (Middle) -->
+                        <div class="slot-group {{#if isCharacterLayer}}active-slot{{/if}}">
+                            <div class="slot-header" onclick="this.querySelector('input').click()">
+                                <input type="radio" name="layer" value="character" data-action="toggle-layer" {{#if isCharacterLayer}}checked{{/if}}>
+                                <span><i class="fas fa-user"></i> Portrait (Middle)</span>
+                            </div>
+                            
+                            {{#if isCharacterLayer}}
+                            <div class="slot-content">
+                                <!-- Transforms -->
+                                <div class="control-group">
+                                     <label>Scale <input type="number" class="val-input" data-target="scale" value="{{transforms.scale}}" step="0.05"></label>
+                                     <input type="range" name="scale" min="0.1" max="5" step="0.05" value="{{transforms.scale}}">
+                                </div>
+                                <div class="control-group">
+                                    <label>X Position <input type="number" class="val-input" data-target="x" value="{{transforms.x}}"></label>
+                                    <input type="range" name="x" min="-500" max="500" value="{{transforms.x}}">
+                                </div>
+                                <div class="control-group">
+                                    <label>Y Position <input type="number" class="val-input" data-target="y" value="{{transforms.y}}"></label>
+                                    <input type="range" name="y" min="-500" max="500" value="{{transforms.y}}">
+                                </div>
+                                <div class="control-group">
+                                    <label>Rotation <input type="number" class="val-input" data-target="rotation" value="{{transforms.rotation}}">°</label>
+                                    <input type="range" name="rotation" min="-180" max="180" value="{{transforms.rotation}}">
+                                </div>
+                            </div>
+                            {{/if}}
+                        </div>
+
+                        <!-- SLOT 1: BACKGROUND (Bottom) -->
+                        <div class="slot-group {{#if isBackgroundLayer}}active-slot{{/if}}">
+                            <div class="slot-header" onclick="this.querySelector('input').click()">
+                                <input type="radio" name="layer" value="background" data-action="toggle-layer" {{#if isBackgroundLayer}}checked{{/if}}>
+                                <span><i class="fas fa-image"></i> Background (Bottom)</span>
+                            </div>
+
+                            {{#if isBackgroundLayer}}
+                            <div class="slot-content">
+                                <div class="control-group">
+                                    <button type="button" id="btn-upload-background" class="full-width" data-action="uploadBackground">
+                                        <i class="fas fa-upload"></i> Upload Background Image
+                                    </button>
+                                </div>
+                                
+                                <div class="control-group">
+                                     <label>Scale <input type="number" class="val-input" data-target="scale" value="{{transforms.scale}}" step="0.05"></label>
+                                     <input type="range" name="scale" min="0.1" max="5" step="0.05" value="{{transforms.scale}}">
+                                </div>
+                                <div class="control-group">
+                                    <label>X Position <input type="number" class="val-input" data-target="x" value="{{transforms.x}}"></label>
+                                    <input type="range" name="x" min="-500" max="500" value="{{transforms.x}}">
+                                </div>
+                                <div class="control-group">
+                                    <label>Y Position <input type="number" class="val-input" data-target="y" value="{{transforms.y}}"></label>
+                                    <input type="range" name="y" min="-500" max="500" value="{{transforms.y}}">
+                                </div>
+                                <div class="control-group">
+                                    <label>Rotation <input type="number" class="val-input" data-target="rotation" value="{{transforms.rotation}}">°</label>
+                                    <input type="range" name="rotation" min="-180" max="180" value="{{transforms.rotation}}">
+                                </div>
+                            </div>
+                            {{/if}}
+                        </div>
+                        
+                        {{else}}
+                        <!-- Avatar Controls (Simplified) -->
+                        <div class="control-group">
+                            <label>Scale <input type="number" class="val-input" data-target="scale" value="{{transforms.scale}}" step="0.05"></label>
+                            <input type="range" name="scale" min="0.1" max="5" step="0.05" value="{{transforms.scale}}">
+                        </div>
+                         <div class="control-group">
+                            <label>X Position <input type="number" class="val-input" data-target="x" value="{{transforms.x}}"></label>
+                            <input type="range" name="x" min="-500" max="500" value="{{transforms.x}}">
+                        </div>
+                        <div class="control-group">
+                            <label>Y Position <input type="number" class="val-input" data-target="y" value="{{transforms.y}}"></label>
+                            <input type="range" name="y" min="-500" max="500" value="{{transforms.y}}">
+                        </div>
+                        {{/if}}
+
+                    </div>
+                    
+                <!-- Tab: Style -->
+                <div class="tab {{#if isTabStyle}}active{{/if}}" data-tab="style">
+                    <!-- Token Only Features -->
+                    <div class="control-group {{#unless isTokenActive}}disabled{{/unless}}">
+                        <label>Frame Style</label>
+                         <div class="frame-selector compact-scroll">
+                            <!-- Remove Frame (Deselect) -->
+                            <div class="frame-item remove-frame" data-action="removeFrame" title="No Frame (Deselect)">
+                                <i class="fas fa-ban"></i>
+                            </div>
+                            
+                            <!-- Trash Can (Drop Zone) -->
+                            <div class="frame-item trash-can" title="Drag Frame here to Delete">
+                                <i class="fas fa-trash"></i>
+                            </div>
+                            
+                            {{#each frames}}
+                            <div class="frame-item draggable {{#if this.active}}active{{/if}}" draggable="true" data-action="selectFrame" data-path="{{this.path}}">
+                                <img src="{{this.path}}">
+                            </div>
+                            {{/each}}
+                            <div class="frame-item add-frame" data-action="pickFrameFile" title="Add Frame">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Shadow Blur</label>
+                        <div class="slider-row">
+                            <input type="range" name="shadowBlur" min="0" max="50" value="{{fx.shadowBlur}}">
+                            <input type="number" class="val-input" data-target="shadowBlur" value="{{fx.shadowBlur}}">
+                        </div>
+                    </div>
+
+                    <!-- Advanced Cutout Tools -->
+                     <div class="control-group">
+                        <label>Tools (Cutout & Pop-Out)</label>
+                        
+                        <div class="tools-grid">
+                            <!-- Tool 1: Eraser -->
+                            <div class="tool-card {{#if isEraserActive}}active{{/if}}">
+                                <div class="tool-header">
+                                    <i class="fas fa-eraser"></i> Eraser
+                                    <button type="button" class="tool-toggle {{#if isEraserActive}}active{{/if}}" data-action="toggleEraser">
+                                        {{#if isEraserActive}}ON{{else}}OFF{{/if}}
+                                    </button>
+                                </div>
+                                <div class="tool-body {{#unless isEraserActive}}disabled{{/unless}}">
+                                    <div class="mode-switch">
+                                        <button type="button" class="mode-btn {{#if (eq eraserMode 'remove')}}active{{/if}}" data-action="setEraserMode" data-mode="remove" title="Remove (Erase)">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="mode-btn {{#if (eq eraserMode 'add')}}active{{/if}}" data-action="setEraserMode" data-mode="add" title="Add (Restore)">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="slider-row compact">
+                                        <input type="range" name="eraserSize" min="5" max="100" value="{{eraserSize}}">
+                                        <input type="number" class="val-input" data-target="eraserSize" value="{{eraserSize}}">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Tool 2: Pop-Out Brush -->
+                            <div class="tool-card {{#if isPopOutActive}}active{{/if}}">
+                                <div class="tool-header">
+                                    <i class="fas fa-magic"></i> Pop-Out
+                                    <button type="button" class="tool-toggle {{#if isPopOutActive}}active{{/if}}" data-action="togglePopout">
+                                        {{#if isPopOutActive}}ON{{else}}OFF{{/if}}
+                                    </button>
+                                </div>
+                                <div class="tool-body {{#unless isPopOutActive}}disabled{{/unless}}">
+                                     <div class="mode-switch">
+                                        <button type="button" class="mode-btn {{#if (eq popOutMode 'add')}}active{{/if}}" data-action="setPopOutMode" data-mode="add" title="Add (Reveal)">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                        <button type="button" class="mode-btn {{#if (eq popOutMode 'remove')}}active{{/if}}" data-action="setPopOutMode" data-mode="remove" title="Remove (Hide)">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <div class="slider-row compact">
+                                        <input type="range" name="popOutSize" min="5" max="100" value="{{popOutSize}}">
+                                        <input type="number" class="val-input" data-target="popOutSize" value="{{popOutSize}}">
+                                    </div>
+                                     <button type="button" class="btn-xs danger" data-action="clear-popout" title="Clear All Pop-Outs" style="margin-top:5px; width:100%;">
+                                        <i class="fas fa-trash"></i> Clear All
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                        <!-- Chroma Key -->
+                         <label class="sub-label">Chroma Key (Auto-Remove)</label>
+                         <div class="chroma-row" style="display: flex; gap: 5px; align-items: center;">
+                            <input type="color" id="chroma-color" value="{{chromaColor}}" title="Color to Remove">
+                            <div class="slider-row compact" style="flex:1;">
+                                 <input type="range" id="chroma-tolerance" min="0" max="200" value="{{chromaTolerance}}" title="Tolerance">
+                                 <input type="number" class="val-input" data-target="chromaTolerance" value="{{chromaTolerance}}">
+                             </div>
+                             <button type="button" class="btn-xs danger" data-action="apply-chroma" title="Apply Chroma Key">
+                                <i class="fas fa-check"></i>
+                             </button>
+                         </div>
+
+                    <!-- Target Layer Selection (Synced with Main Tab) -->
+                    <div class="control-group" style="margin-top: 15px; border-top: 1px solid #333; padding-top: 10px;">
+                        <label>Active Layer (Target)</label>
+                        <div class="btn-group-row">
+                            <button type="button" class="btn-layer {{#if isFrameLayer}}active{{/if}}" data-action="setLayer" data-layer="frame">
+                                <i class="fas fa-circle-notch"></i> Top (Frame)
+                            </button>
+                            <button type="button" class="btn-layer {{#if isCharacterLayer}}active{{/if}}" data-action="setLayer" data-layer="character">
+                                <i class="fas fa-user"></i> Middle (Char)
+                            </button>
+                            <button type="button" class="btn-layer {{#if isBackgroundLayer}}active{{/if}}" data-action="setLayer" data-layer="background">
+                                <i class="fas fa-image"></i> Bottom (BG)
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="fx-grid">
+                         <div class="color-row">
+                            <label>Shadow Color</label>
+                            <color-picker name="shadowColor" value="{{fx.shadowColor}}"></color-picker>
+                         </div>
+                         <div class="color-row">
+                            <label>Background</label>
+                            <color-picker name="backgroundColor" value="{{fx.backgroundColor}}"></color-picker>
+                         </div>
+                    </div>
+                    
+
+                </div>
+
+
+        </div>
+
+    </div>
+
+</form>

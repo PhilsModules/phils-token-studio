@@ -1,0 +1,101 @@
+<div class="pac-main-layout">
+  <!-- Left: Canvas Area -->
+  <section class="pac-canvas-container">
+    <div class="pac-canvas-wrapper" id="pac-canvas-wrapper">
+      <!-- Canvas will be injected here by JS -->
+      <div class="pac-empty-state">
+        <i class="fas fa-image"></i>
+        <p>Drag & Drop an image here<br />or use the controls</p>
+      </div>
+    </div>
+    <div class="pac-canvas-controls">
+      <button class="pac-btn-icon" data-action="zoom-out" title="Zoom Out"><i
+          class="fas fa-minus"
+        ></i></button>
+      <span class="pac-zoom-level">100%</span>
+      <button class="pac-btn-icon" data-action="zoom-in" title="Zoom In"><i
+          class="fas fa-plus"
+        ></i></button>
+      <button
+        class="pac-btn-icon"
+        data-action="reset-view"
+        title="Reset View"
+      ><i class="fas fa-compress-arrows-alt"></i></button>
+    </div>
+  </section>
+
+  <!-- Right: Sidebar Controls -->
+  <aside class="pac-sidebar">
+    <header class="pac-sidebar-header">
+      <h2>Layers</h2>
+      <button class="pac-btn-small" data-action="add-layer" title="Add Layer"><i
+          class="fas fa-plus"
+        ></i></button>
+    </header>
+
+    <div class="pac-layers-list">
+      <!-- Dynamic Layer Items will go here -->
+      <div class="pac-layer-item active" data-layer="frame">
+        <i class="fas fa-eye"></i>
+        <span class="type-icon"><i class="fas fa-circle-notch"></i></span>
+        <span class="layer-name">Frame</span>
+        <div class="layer-actions">
+          <i class="fas fa-cog"></i>
+        </div>
+      </div>
+      <div class="pac-layer-item" data-layer="character">
+        <i class="fas fa-eye"></i>
+        <span class="type-icon"><i class="fas fa-user-alt"></i></span>
+        <span class="layer-name">Character</span>
+        <div class="layer-actions">
+          <button class="pac-btn-icon-small" data-action="upload-image"><i
+              class="fas fa-upload"
+            ></i></button>
+        </div>
+      </div>
+      <div class="pac-layer-item" data-layer="background">
+        <i class="fas fa-eye"></i>
+        <span class="type-icon"><i class="fas fa-fill-drip"></i></span>
+        <span class="layer-name">Background</span>
+      </div>
+    </div>
+
+    <div class="pac-properties-panel">
+      <h3>Properties: {{activeLayer}}</h3>
+            
+      {{#if isFrameLayer}}
+       <div class="pac-control-group">
+          <label>Choose Frame</label>
+          <div class="pac-frame-grid">
+              {{#each frames}}
+              <div class="pac-frame-select" data-src="{{this.src}}" title="{{this.name}}">
+                  <img src="{{this.src}}">
+              </div>
+              {{/each}}
+          </div>
+      </div>
+      {{/if}}
+
+      <div class="pac-control-group">
+        <label>Opacity</label>
+        <input type="range" min="0" max="1" step="0.1" value="1" />
+      </div>
+      <div class="pac-control-group">
+        <label>Blend Mode</label>
+        <select>
+          <option value="normal">Normal</option>
+          <option value="multiply">Multiply</option>
+          <option value="screen">Screen</option>
+          <option value="overlay">Overlay</option>
+        </select>
+      </div>
+    </div>
+
+    <footer class="pac-sidebar-footer">
+      <button class="pac-btn-primary full-width" data-action="save-avatar">
+        <i class="fas fa-save"></i>
+        Save & Apply
+      </button>
+    </footer>
+  </aside>
+</div>
