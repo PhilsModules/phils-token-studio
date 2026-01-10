@@ -1,6 +1,6 @@
 <div align="center">
 
-# Phils Token Studio 🎨
+# Phils Token Studio Beta Release 🎨
 
 ![Foundry v13 Compatible](https://img.shields.io/badge/Foundry-v13-brightgreen?style=flat-square) ![Foundry v12 Compatible](https://img.shields.io/badge/Foundry-v12-green?style=flat-square) ![License](https://img.shields.io/badge/License-GPLv3-blue?style=flat-square)
 [![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)](https://github.com/PhilsModules/phils-token-studio/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
@@ -144,3 +144,4 @@ See `LICENSE` file for details.
     <br><br>
     <p><i>Made with ❤️ for the Foundry VTT Community</i></p>
 </div>
+
