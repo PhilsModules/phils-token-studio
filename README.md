@@ -7,11 +7,18 @@
 
 <br>
 
-> [!WARNING] > **This module is in active development!** <br>
+</div>
+
+> [!WARNING]
+> ### This module is in active development!
+>
 > It **WILL** contain bugs and incomplete features. Use at your own risk.
 >
-> **Dieses Modul befindet sich in aktiver Entwicklung!** <br>
+> ### Dieses Modul befindet sich in aktiver Entwicklung!
+>
 > Es **WIRD** Fehler und unvollständige Funktionen enthalten. Nutzung auf eigene Gefahr.
+
+<div align="center">
 
 <br>
 
@@ -64,7 +71,7 @@ Phils Token Studio is a modern, high-performance token editor, designed to seaml
 3.  Click **Install Module**.
 4.  Paste the following **Manifest URL** into the field:
     ```text
-    https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json
+    [https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json](https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json)
     ```
 5.  Click **Install**.
 
@@ -115,7 +122,7 @@ Phils Token Studio ist ein moderner, leistungsstarker Token-Editor, entwickelt f
 3.  Klicke auf **Install Module**.
 4.  Füge die folgende **Manifest URL** unten ein:
     ```text
-    https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json
+    [https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json](https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json)
     ```
 5.  Klicke auf **Install**.
 
