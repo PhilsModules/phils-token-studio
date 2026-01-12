@@ -71,7 +71,7 @@ Phils Token Studio is a modern, high-performance token editor, designed to seaml
 3.  Click **Install Module**.
 4.  Paste the following **Manifest URL** into the field:
     ```text
-    [https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json](https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json)
+    https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json
     ```
 5.  Click **Install**.
 
@@ -122,7 +122,7 @@ Phils Token Studio ist ein moderner, leistungsstarker Token-Editor, entwickelt f
 3.  Klicke auf **Install Module**.
 4.  Füge die folgende **Manifest URL** unten ein:
     ```text
-    [https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json](https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json)
+   https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json
     ```
 5.  Klicke auf **Install**.
 
@@ -159,3 +159,4 @@ See `LICENSE` file for details.
     <br><br>
     <p><i>Made with ❤️ for the Foundry VTT Community</i></p>
 </div>
+
