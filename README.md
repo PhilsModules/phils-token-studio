@@ -1,9 +1,17 @@
 <div align="center">
 
-# Phils Token Studio Beta Release 🎨
+# Phils Token Studio 🎨
 
 ![Foundry v13 Compatible](https://img.shields.io/badge/Foundry-v13-brightgreen?style=flat-square) ![Foundry v12 Compatible](https://img.shields.io/badge/Foundry-v12-green?style=flat-square) ![License](https://img.shields.io/badge/License-GPLv3-blue?style=flat-square)
-[![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)](https://github.com/PhilsModules/phils-token-studio/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
+[![Version](https://img.shields.io/badge/Version-1.1.0-blue?style=flat-square)](https://github.com/PhilsModules/phils-token-studio/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
+
+<br>
+
+> [!WARNING] > **This module is in active development!** <br>
+> It **WILL** contain bugs and incomplete features. Use at your own risk.
+>
+> **Dieses Modul befindet sich in aktiver Entwicklung!** <br>
+> Es **WIRD** Fehler und unvollständige Funktionen enthalten. Nutzung auf eigene Gefahr.
 
 <br>
 
@@ -144,4 +152,3 @@ See `LICENSE` file for details.
     <br><br>
     <p><i>Made with ❤️ for the Foundry VTT Community</i></p>
 </div>
-
