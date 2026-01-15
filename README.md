@@ -22,26 +22,6 @@
 
 <br><div align="center">
 
-# Phils Token Studio 🎨
-
-![Foundry v13 Compatible](https://img.shields.io/badge/Foundry-v13-brightgreen?style=flat-square) ![Foundry v12 Compatible](https://img.shields.io/badge/Foundry-v12-green?style=flat-square) ![License](https://img.shields.io/badge/License-GPLv3-blue?style=flat-square)
-[![Version](https://img.shields.io/badge/Version-1.1.3-blue?style=flat-square)](https://github.com/PhilsModules/phils-token-studio/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
-
-<br>
-
-</div>
-
-> [!WARNING]
-> ### This module is in active development!
->
-> It **WILL** contain bugs and incomplete features. Use at your own risk.
->
-> ### Dieses Modul befindet sich in aktiver Entwicklung!
->
-> Es **WIRD** Fehler und unvollständige Funktionen enthalten. Nutzung auf eigene Gefahr.
-
-<div align="center">
-
 <br>
 
 **The definitive token editor for Foundry VTT.**
@@ -334,6 +314,7 @@ See `LICENSE` file for details.
     <br><br>
     <p><i>Made with ❤️ for the Foundry VTT Community</i></p>
 </div>
+
 
 
 
