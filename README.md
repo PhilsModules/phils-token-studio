@@ -78,7 +78,7 @@ Phils Token Studio is a modern, high-performance token editor, designed to seaml
 
 - **Drag & Drop:** Simply drag images from your file browser or directly onto the canvas.
 - **File Browser:** Integrated file picker to select assets from your user data.
-- **Frame Library:** Comes with a selection of high-quality default frames to get you started.
+- **Frame Library:** Comes with a selection of high-quality default frames to get you started. WIP
 
 ### 🛠️ Advanced Tools
 
@@ -130,7 +130,7 @@ Phils Token Studio ist ein moderner, leistungsstarker Token-Editor, entwickelt f
 
 - **Drag & Drop:** Ziehe Bilder einfach von deinem Dateibrowser oder direkt auf die Leinwand.
 - **Dateibrowser:** Integrierte Dateiauswahl, um Assets aus deinen Benutzerdaten zu laden.
-- **Rahmen-Bibliothek:** Kommt mit einer Auswahl an hochwertigen Standard-Rahmen, um direkt loszulegen.
+- **Rahmen-Bibliothek:** Kommt mit einer Auswahl an hochwertigen Standard-Rahmen, um direkt loszulegen. WIP
 
 ### 🛠️ Fortgeschrittene Werkzeuge
 
@@ -324,6 +324,7 @@ See `LICENSE` file for details.
     <br><br>
     <p><i>Made with ❤️ for the Foundry VTT Community</i></p>
 </div>
+
 
 
 
