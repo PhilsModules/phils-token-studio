@@ -607,6 +607,14 @@
     background: rgba(255,255,255,0.05);
 }
 
+.token-studio-app .slot-group.disabled,
+.token-studio-app .btn-layer.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    filter: grayscale(1);
+    text-decoration: line-through;
+}
+
 .token-studio-app .slot-header input[type="radio"] {
     margin: 0;
 }

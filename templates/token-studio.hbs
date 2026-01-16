@@ -110,7 +110,7 @@
                         
 
                         <!-- SLOT 3: FRAME (Top) -->
-                        <div class="slot-group {{#if isFrameLayer}}active-slot{{/if}}">
+                        <div class="slot-group {{#if isFrameLayer}}active-slot{{/if}} {{#if useFoundryRing}}disabled{{/if}}">
                             <div class="slot-header" onclick="this.querySelector('input').click()">
                                 <input type="radio" name="layer" value="frame" data-action="toggle-layer" {{#if isFrameLayer}}checked{{/if}}>
                                 <span><i class="fas fa-border-style"></i> {{localize 'TOKEN-STUDIO.FrameTop'}}</span>
@@ -366,7 +366,7 @@
                     <div class="control-group" style="margin-top: 15px; border-top: 1px solid #333; padding-top: 10px;">
                         <label>{{localize 'TOKEN-STUDIO.ActiveLayer'}}</label>
                         <div class="btn-group-row">
-                            <button type="button" class="btn-layer {{#if isFrameLayer}}active{{/if}}" data-action="setLayer" data-layer="frame">
+                            <button type="button" class="btn-layer {{#if isFrameLayer}}active{{/if}} {{#if useFoundryRing}}disabled{{/if}}" data-action="setLayer" data-layer="frame">
                                 <i class="fas fa-circle-notch"></i> {{localize 'TOKEN-STUDIO.LayerFrame'}}
                             </button>
                             <button type="button" class="btn-layer {{#if isCharacterLayer}}active{{/if}}" data-action="setLayer" data-layer="character">
@@ -386,6 +386,9 @@
                          <div class="color-row" style="flex: 1; display: flex; align-items: center; justify-content: space-between;">
                             <label>{{localize 'TOKEN-STUDIO.Background'}}</label>
                             <input type="color" name="backgroundColor" value="{{fx.backgroundColor}}" style="margin-left:5px;">
+                            <button type="button" class="btn-xs danger" data-action="remove-background-color" title="{{localize 'TOKEN-STUDIO.RemoveBackgroundColor'}}" style="margin-left: 5px;">
+                                <i class="fas fa-times"></i>
+                            </button>
                          </div>
                     </div>
 

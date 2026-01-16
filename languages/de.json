@@ -62,5 +62,6 @@
     "TOKEN-STUDIO.RemoveFrameConfirm": "Diesen Rahmen aus der Liste entfernen?",
     "TOKEN-STUDIO.FrameRemoved": "Rahmen entfernt.",
     "TOKEN-STUDIO.NotImageFile": "Keine Bilddatei.",
-    "TOKEN-STUDIO.FailedLoadImage": "Bild konnte nicht geladen werden."
+    "TOKEN-STUDIO.FailedLoadImage": "Bild konnte nicht geladen werden.",
+    "TOKEN-STUDIO.RemoveBackgroundColor": "Hintergrundfarbe entfernen"
 }

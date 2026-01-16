@@ -93,7 +93,10 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             isPaintActive: false,
             paintMode: "add", // add | remove
             paintSize: 20,
-            paintColor: "#ff0000"
+            paintColor: "#ff0000",
+
+            // Content Flags
+            hasPopOutContent: defaults.hasPopOutContent || false
         };
         
         this.isCanvasPainting = false; // Flag to track actual canvas painting vs generic dragging
@@ -1045,7 +1048,8 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         
         // 4. Character (Part 2: Pop-Out / Brush Only)
         // This draws ONLY the parts painted by the brush, ON TOP of the frame.
-        if (this.tokenBuffer && this.popOutBuffer && this._bufferHasContent(this.popOutBuffer)) {
+        // We now check uiState.hasPopOutContent to avoid running this on empty buffers
+        if (this.tokenBuffer && this.popOutBuffer && this.uiState.hasPopOutContent) {
              ctx.save();
              
              // Temp Canvas for Outer Character
@@ -1415,6 +1419,7 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
              ctx.fill();
              ctx.restore();
              
+             this.uiState.hasPopOutContent = true; // Mark as dirty
              this.drawTokenSandwich();
              return;
         }
@@ -1797,6 +1802,10 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
              this.uiState.eraserSize = val;
              return;
         }
+        if (prop === "paintSize") {
+             this.uiState.paintSize = val;
+             return;
+        }
         if (prop === "popOutSize") {
              this.uiState.popOutSize = val;
              return;
@@ -2114,18 +2123,22 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             // Auto-Configure Dynamic Token Ring if enabled
             if (this.uiState.useFoundryRing) {
                  // DYNAMIC RING MODE:
-                 // "Both values must match" - User Request
-                 
+                 // Normalize scale based on padding ratio (0.8 / 1.2) to maintain consistent ring size.
+                 const targetRatio = 0.6666666;
+                 const finalScale = newScale * targetRatio;
+
                  // 1. Enable Ring
                  updates["prototypeToken.ring.enabled"] = true;
                  
-                 // 2. Set Subject Scale (to match our padding)
-                 updates["prototypeToken.ring.subject.scale"] = newScale;
+                 // 2. Set Subject Scale
+                 updates["prototypeToken.ring.subject.scale"] = finalScale;
                  
-                 // 3. Set Global Scale to MATCH Subject Scale
-                 // User manual testing confirms this is required for correct fit.
-                 updates["prototypeToken.texture.scaleX"] = newScale;
-                 updates["prototypeToken.texture.scaleY"] = newScale;
+                 // 2.5 Ensure Subject Texture uses Main Texture (Set to result explicitly)
+                 updates["prototypeToken.ring.subject.texture"] = result;
+
+                 // 3. Set Global Scale
+                 updates["prototypeToken.texture.scaleX"] = finalScale;
+                 updates["prototypeToken.texture.scaleY"] = finalScale;
                  
             } else {
                  // BAKED RING MODE:
@@ -2133,7 +2146,6 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
                  updates["prototypeToken.ring.enabled"] = false;
                  
                  // 2. Apply Scale to Global Token
-                 // This makes the whole image (Ring + Art) larger so the Ring (which is smaller in the image) matches the grid.
                  updates["prototypeToken.texture.scaleX"] = newScale;
                  updates["prototypeToken.texture.scaleY"] = newScale;
             }
@@ -2148,13 +2160,18 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
                 };
                 
                 if (this.uiState.useFoundryRing) {
+                    // Normalize scale based on padding ratio
+                    const targetRatio = 0.6666666;
+                    const finalScale = newScale * targetRatio;
+
                     update["ring.enabled"] = true;
-                    update["ring.subject.scale"] = newScale;
-                    update["texture.scaleX"] = newScale;
-                    update["texture.scaleY"] = newScale;
+                    update["ring.subject.scale"] = finalScale;
+                    update["ring.subject.texture"] = result; 
+                    update["texture.scaleX"] = finalScale;
+                    update["texture.scaleY"] = finalScale;
                 } else {
                     update["ring.enabled"] = false;
-                    update["texture.scaleX"] = newScale;
+                    update["texture.scaleX"] = newScale; 
                     update["texture.scaleY"] = newScale;
                 }
                 return update;
@@ -2267,6 +2284,17 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         this.render();
     }
 
+    _onRemoveBackgroundColor(event) {
+        // Clear value
+        this.uiState.token.fx.backgroundColor = null;
+        
+        // Update Picker if exists (Visual feedback is limited for color inputs, likely shows black)
+        const picker = this.element.querySelector("input[name='backgroundColor']");
+        if (picker) picker.value = "#000000"; 
+        
+        this.drawAll();
+    }
+
     _onUploadPortrait(event) {
         this.uiState.activeView = 'token'; 
         this.uiState.activeLayer = 'character'; // Force character layer
@@ -2329,7 +2357,24 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
     
     _onToggleFoundryRing(event) {
         this.uiState.useFoundryRing = event.target.checked;
-        this.drawAll(); // Re-draw to show/hide the dashed guide
+        
+        if (this.uiState.useFoundryRing) {
+            // RESET Frame Settings to defaults to prevent offset bugs
+            this.uiState.token.frame.transforms = {
+                scale: 1.0,
+                x: 0,
+                y: 0,
+                rotation: 0
+            };
+            
+            // If we are currently editing the frame, switch to character layer
+            if (this.uiState.activeLayer === 'frame') {
+                this.uiState.activeLayer = 'character';
+            }
+        }
+        
+        this.drawAll(); 
+        this.render(); // Force UI update to disable/enable controls
     }
 
     async _uploadFile(file) {

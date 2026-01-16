@@ -62,5 +62,6 @@
     "TOKEN-STUDIO.RemoveFrameConfirm": "Remove this frame from the list?",
     "TOKEN-STUDIO.FrameRemoved": "Frame removed.",
     "TOKEN-STUDIO.NotImageFile": "Not an image file.",
-    "TOKEN-STUDIO.FailedLoadImage": "Failed to load image."
+    "TOKEN-STUDIO.FailedLoadImage": "Failed to load image.",
+    "TOKEN-STUDIO.RemoveBackgroundColor": "Remove Background Color"
 }
