@@ -10,6 +10,7 @@
 </div>
 
 > [!WARNING]
+>
 > ### This module is in active development!
 >
 > It **WILL** contain bugs and incomplete features. Use at your own risk.
@@ -21,6 +22,27 @@
 <div align="center">
 
 <br><div align="center">
+
+# Phils Token Studio 🎨
+
+![Foundry v13 Compatible](https://img.shields.io/badge/Foundry-v13-brightgreen?style=flat-square) ![Foundry v12 Compatible](https://img.shields.io/badge/Foundry-v12-green?style=flat-square) ![License](https://img.shields.io/badge/License-GPLv3-blue?style=flat-square)
+[![Version](https://img.shields.io/badge/Version-1.1.3-blue?style=flat-square)](https://github.com/PhilsModules/phils-token-studio/releases) [![Patreon](https://img.shields.io/badge/SUPPORT-Patreon-ff424d?style=flat-square&logo=patreon)](https://www.patreon.com/PhilsModules)
+
+<br>
+
+</div>
+
+> [!WARNING]
+>
+> ### This module is in active development!
+>
+> It **WILL** contain bugs and incomplete features. Use at your own risk.
+>
+> ### Dieses Modul befindet sich in aktiver Entwicklung!
+>
+> Es **WIRD** Fehler und unvollständige Funktionen enthalten. Nutzung auf eigene Gefahr.
+
+<div align="center">
 
 <br>
 
@@ -37,16 +59,6 @@ _Der definitive Token-Editor für Foundry VTT._
 <br>
 
 ---
-
-<br>
-
-<div align="center">
-<img src="https://github.com/PhilsModules/phils-token-studio/blob/main/preview.png" alt="Preview" width="800">
-</div>
-
-<br>
-
-<br>
 
 <br>
 
@@ -90,7 +102,10 @@ Phils Token Studio is a modern, high-performance token editor, designed to seaml
 
 ## 🚀 Getting Started
 
-1.  **Open the Studio:** Click the **Token Studio** button in the Actor Sheet header.
+1.  **Open the Studio:**
+    - **D&D 5e:** Click the three dots (Context Menu) in the sheet header -> "Token Studio".
+    - **PF2e / Other Systems:** Hover over the Character Profile Image -> Click the "User/Pen" icon.
+    - **Fallback:** If neither works, look for a "Token Studio" icon in the window header (next to Close button).
 2.  **Select a Source:** Drag an image or actor onto the stage.
 3.  **Choose a Frame:** Select a frame style from the library.
 4.  **Edit:** Use the tools to position, scale, and erase parts of your image.
@@ -173,7 +188,6 @@ See `LICENSE` file for details.
     <br><br>
     <p><i>Made with ❤️ for the Foundry VTT Community</i></p>
 </div>
-
 
 **The definitive token editor for Foundry VTT.**
 <br>
@@ -275,15 +289,18 @@ Phils Token Studio ist ein moderner, leistungsstarker Token-Editor, entwickelt f
 3.  Klicke auf **Install Module**.
 4.  Füge die folgende **Manifest URL** unten ein:
 
- ```
-   https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json
 ```
-    
+  https://github.com/PhilsModules/phils-token-studio/releases/latest/download/module.json
+```
+
 5.  Klicke auf **Install**.
 
 ## 🚀 Erste Schritte
 
-1.  **Öffne das Studio:** Klicke auf den **Token Studio** Button in der Kopfzeile des Charakterbogens.
+1.  **Öffne das Studio:**
+    - **D&D 5e:** Klicke auf die drei Punkte (Kontextmenü) oben rechts -> "Token Studio".
+    - **PF2e / Andere:** Fahre mit der Maus über das Profilbild -> Klicke auf das "User/Stift" Icon.
+    - **Fallback:** Falls nichts davon funktioniert, suche nach dem Icon in der Fenster-Kopfzeile.
 2.  **Wähle eine Quelle:** Ziehe ein Bild oder einen Akteur auf die Bühne.
 3.  **Wähle einen Rahmen:** Suche dir einen Rahmenstil aus der Bibliothek aus.
 4.  **Bearbeiten:** Nutze die Werkzeuge zum Positionieren, Skalieren und Radieren.
@@ -314,10 +331,3 @@ See `LICENSE` file for details.
     <br><br>
     <p><i>Made with ❤️ for the Foundry VTT Community</i></p>
 </div>
-
-
-
-
-
-
-

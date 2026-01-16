@@ -42,6 +42,9 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
                     shadowColor: defaults.token?.fx?.shadowColor ?? "#000000",
                     backgroundColor: defaults.token?.fx?.backgroundColor || null 
                 },
+                // dynamicRingScale & useFoundryRing moved to Root
+                avatarAspectRatio: 1.0,
+                
                 background: {
                     active: defaults.token?.background?.active || false,
                     path: defaults.token?.background?.path || null,
@@ -80,7 +83,17 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             popOutSize: 50, // Default Pop-Out Size
             
             chromaTolerance: 50,
-            chromaColor: "#00ff00"
+            chromaColor: "#00ff00",
+            
+            // Root Level Settings
+            dynamicRingScale: defaults.dynamicRingScale || 1.0,
+            useFoundryRing: defaults.useFoundryRing || false,
+            
+            // Paint Tool State
+            isPaintActive: false,
+            paintMode: "add", // add | remove
+            paintSize: 20,
+            paintColor: "#ff0000"
         };
         
         this.isCanvasPainting = false; // Flag to track actual canvas painting vs generic dragging
@@ -108,6 +121,7 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         this.backgroundBuffer = null;
         this.frameBuffer = null; // New Frame Buffer
         this.popOutBuffer = null; // New Pop-Out Mask
+        this.paintBuffer = null; // Paint Buffer
         this.originalImage = null; // Keep raw ref (Character)
         this.originalFrameImage = null; // Frame Raw
         this.originalBackgroundImage = null; // Background Raw
@@ -247,7 +261,10 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
                 
                 // Only hijack if we actually handle it
                 if (handler) {
-                    ev.preventDefault();
+                    // FIX: Do not preventDefault on inputs (checkboxes) or selects, otherwise they don't toggle/open
+                    if (el.tagName !== "INPUT" && el.tagName !== "SELECT") {
+                        ev.preventDefault();
+                    }
                     ev.stopPropagation();
                     handler.call(this, ev, el);
                 }
@@ -310,6 +327,28 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         if(canvasToken) canvasToken.addEventListener("mousedown", startPainting);
         if(canvasAvatar) canvasAvatar.addEventListener("mousedown", startPainting);
         window.addEventListener("mouseup", stopPainting);
+        
+        // Color Inputs (Shadow/Background) - FIX: Explicit Listeners
+        html.querySelectorAll("input[type='color']").forEach(input => {
+            input.addEventListener("input", (e) => {
+                const name = e.target.name;
+                const value = e.target.value;
+                
+                if (name === "shadowColor") {
+                    this.uiState.token.fx.shadowColor = value;
+                    this.drawAll();
+                } else if (name === "backgroundColor") {
+                    this.uiState.token.fx.backgroundColor = value;
+                    this.drawAll();
+                } else if (name === "chromaColor") {
+                    this.uiState.chromaColor = value;
+                    this.uiState.token.chromaColor = value; // ?
+                    // this.drawAll(); // Chroma is applied on click
+                } else if (name === "paintColor") {
+                    this.uiState.paintColor = value;
+                }
+            });
+        });
 
 
         // TRANSFORM INPUTS (Sliders & Manual Entry)
@@ -352,6 +391,22 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         html.querySelectorAll("input[name='layer']").forEach(input => {
             input.addEventListener("change", this._onLayerChange.bind(this));
         });
+
+        // New Actions
+        const btnDeleteBG = html.querySelector("[data-action='deleteBackground']");
+        if (btnDeleteBG) btnDeleteBG.addEventListener("click", this._onDeleteBackground.bind(this));
+        
+        const btnUploadPortrait = html.querySelector("[data-action='uploadPortrait']");
+        if (btnUploadPortrait) btnUploadPortrait.addEventListener("click", this._onUploadPortrait.bind(this));
+        
+        const inputAvatarRatio = html.querySelector("[data-action='changeAvatarRatio']");
+        if (inputAvatarRatio) inputAvatarRatio.addEventListener("change", this._onChangeAvatarRatio.bind(this));
+        
+        const inputRingScale = html.querySelector("[data-action='changeRingScale']");
+        if (inputRingScale) inputRingScale.addEventListener("change", this._onChangeRingScale.bind(this));
+
+        const checkFoundryRing = html.querySelector("[data-action='toggleFoundryRing']");
+        if (checkFoundryRing) checkFoundryRing.addEventListener("change", this._onToggleFoundryRing.bind(this));
 
 
 
@@ -507,8 +562,8 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         const { DialogV2 } = foundry.applications.api;
         
         const confirm = await DialogV2.confirm({
-            window: { title: "Remove Frame?" },
-            content: `<p>Remove this frame from the list?</p><small>${path}</small>`,
+            window: { title: game.i18n.localize("TOKEN-STUDIO.RemoveFrameTitle") },
+            content: `<p>${game.i18n.localize("TOKEN-STUDIO.RemoveFrameConfirm")}</p><small>${path}</small>`,
             rejectClose: false,
             modal: true
         });
@@ -524,7 +579,8 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             }
             
             this.render();
-            ui.notifications.info("Frame removed.");
+            this.render();
+            ui.notifications.info(game.i18n.localize("TOKEN-STUDIO.FrameRemoved"));
         }
     }
 
@@ -579,9 +635,21 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             chromaTolerance: this.uiState.chromaTolerance,
             chromaColor: this.uiState.chromaColor,
 
+            // Paint Tool
+            isPaintActive: this.uiState.isPaintActive,
+            paintMode: this.uiState.paintMode,
+            paintSize: this.uiState.paintSize,
+            paintColor: this.uiState.paintColor,
+
             // Tab State (Booleans for HBS)
             isTabTransform: (this.uiState.activeTab || "transform") === "transform",
-            isTabStyle: this.uiState.activeTab === "style"
+            isTabStyle: this.uiState.activeTab === "style",
+
+            // New State
+            // New State
+            dynamicRingScale: this.uiState.dynamicRingScale,
+            useFoundryRing: this.uiState.useFoundryRing,
+            avatarAspectRatio: this.uiState.avatarAspectRatio
         };
     }
     
@@ -622,7 +690,7 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         
         if (ev.dataTransfer.files && ev.dataTransfer.files[0]) {
             const file = ev.dataTransfer.files[0];
-            if (!file.type.startsWith("image/")) return ui.notifications.warn("Not an image file.");
+            if (!file.type.startsWith("image/")) return ui.notifications.warn(game.i18n.localize("TOKEN-STUDIO.NotImageFile"));
             
             // If we are in "Background" mode, load as background??
             // For now, let's keep drag/drop as MAIN source to prevent confusion, 
@@ -660,6 +728,9 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             if (!this.popOutBuffer) {
                 this.popOutBuffer = this._createPopOutBuffer();
             }
+            if (!this.paintBuffer) {
+                this.paintBuffer = this._createPopOutBuffer(); // Same size/logic
+            }
             
             
             this.drawAll();
@@ -671,14 +742,16 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             return true;
         } catch (err) {
             console.error("Phils Quick Tokens | Failed to load source:", err);
-            ui.notifications.error("Failed to load image.");
+            ui.notifications.error(game.i18n.localize("TOKEN-STUDIO.FailedLoadImage"));
         }
     }
 
     _createPopOutBuffer() {
         const canvas = document.createElement("canvas");
-        canvas.width = this.resolution;
-        canvas.height = this.resolution;
+        const scale = this.uiState.dynamicRingScale || 1.0;
+        const size = Math.round(this.resolution * scale);
+        canvas.width = size;
+        canvas.height = size;
         return canvas;
     }
 
@@ -761,8 +834,9 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
 
     async _onPickSourceFile() {
         try {
-            const FilePicker = foundry.applications.apps.FilePicker || FilePicker;
-            new FilePicker({
+
+            const FilePickerClass = FilePicker;
+            new FilePickerClass({
                 type: "image",
                 callback: (path) => {
                     this.uiState.sourcePath = path; // Save the source!
@@ -777,9 +851,10 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
 
     async _onUploadBackground() {
         try {
+
             console.log("Phils Quick Tokens | Opening Background Uploader...");
-            const FilePicker = foundry.applications.apps.FilePicker || FilePicker;
-            new FilePicker({
+            const FilePickerClass = FilePicker;
+            new FilePickerClass({
                 type: "image",
                 callback: (path) => {
                     this._loadBackground(path);
@@ -800,26 +875,70 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         this.drawAvatar();
     }
 
-    drawTokenSandwich() {
-        if (!this.canvasToken || !this.ctxToken) return;
-        const ctx = this.ctxToken;
+    drawAll() {
+        this.drawTokenSandwich();
+        this.drawAvatar();
+    }
+    
+    // Listeners for Paint Tool
+    _onTogglePaint(ev) {
+        // Toggle Paint
+        this.uiState.isPaintActive = !this.uiState.isPaintActive;
+        
+        // Disable others
+        if(this.uiState.isPaintActive) {
+            this.uiState.isEraserActive = false;
+            this.uiState.isPopOutActive = false;
+        }
+        this.render();
+    }
+    
+    _onSetPaintMode(ev, el) {
+        this.uiState.paintMode = el.dataset.mode;
+        this.render();
+    }
+    
+    _onClearPaint(ev) {
+        if(!this.paintBuffer) return;
+        const ctx = this.paintBuffer.getContext("2d");
+        ctx.clearRect(0, 0, this.paintBuffer.width, this.paintBuffer.height);
+        this.drawAll();
+    }
+
+    drawTokenSandwich(targetCtx = null, isExport = false) {
+        // if (!this.canvasToken || !this.ctxToken) return;
+        // Allow rendering to offscreen canvas
+        if (!targetCtx && (!this.canvasToken || !this.ctxToken)) return;
+        
+        const ctx = targetCtx || this.ctxToken;
         const state = this.uiState.token;
         const size = this.resolution;
         
-        if (this.canvasToken.width !== size || this.canvasToken.height !== size) {
-            this.canvasToken.width = size;
-            this.canvasToken.height = size;
-        }
-
-        // Clean Slate
-        ctx.clearRect(0, 0, size, size);
-
         // ----------------------------------------------------
         // PREPARE GEOMETRY
         // ----------------------------------------------------
+        // Dynamic Ring Scale:
+        // By default, Resolution = 1 Grid Unit.
+        // If scale is 1.5, Canvas Size = Resolution * 1.5.
+        // But the RING itself must remain at Resolution size (centered).
+        
+        const ringScale = this.uiState.dynamicRingScale || 1.0;
+        const canvasSize = Math.round(size * ringScale);
+        
+        if (this.canvasToken.width !== canvasSize || this.canvasToken.height !== canvasSize) {
+            this.canvasToken.width = canvasSize;
+            this.canvasToken.height = canvasSize;
+        }
+        
+        // Clean Slate (New Size)
+        ctx.clearRect(0, 0, canvasSize, canvasSize);
+
         const fState = state.frame;
-        const cx = size/2 + fState.transforms.x;
-        const cy = size/2 + fState.transforms.y;
+        // Center acts as the anchor (Offset by canvas center)
+        const cx = canvasSize/2 + fState.transforms.x;
+        const cy = canvasSize/2 + fState.transforms.y;
+        
+        // Ring Radius is based on BASE RESOLUTION (Grid Unit), not canvas size
         const r = (size/2) * fState.transforms.scale; 
 
         // ----------------------------------------------------
@@ -841,11 +960,25 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             }
             if (state.background?.active && this.backgroundBuffer) {
                 const bgState = state.background;
-                ctx.translate(size/2 + bgState.transforms.x, size/2 + bgState.transforms.y);
+                ctx.translate(canvasSize/2 + bgState.transforms.x, canvasSize/2 + bgState.transforms.y);
                 ctx.rotate((bgState.transforms.rotation * Math.PI) / 180);
                 ctx.scale(bgState.transforms.scale, bgState.transforms.scale);
                 ctx.drawImage(this.backgroundBuffer, -this.backgroundBuffer.width/2, -this.backgroundBuffer.height/2);
             }
+            ctx.restore();
+        }
+
+        // 1.5 PAINT LAYER (Painted manually) - Merged on top of Background
+        if (this.paintBuffer && this._bufferHasContent(this.paintBuffer)) {
+            ctx.save();
+             // CLIP to Circle (same as BG)
+            ctx.beginPath();
+            ctx.arc(cx, cy, Math.max(0, r), 0, Math.PI * 2);
+            ctx.clip();
+            
+            // Draw Paint
+            ctx.drawImage(this.paintBuffer, 0, 0); // Paint buffer is canvasSize
+            
             ctx.restore();
         }
 
@@ -863,7 +996,7 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
                  ctx.shadowColor = state.fx.shadowColor;
                  ctx.shadowBlur = state.fx.shadowBlur;
              }
-             ctx.translate(size/2 + state.transforms.x, size/2 + state.transforms.y);
+             ctx.translate(canvasSize/2 + state.transforms.x, canvasSize/2 + state.transforms.y);
              ctx.rotate((state.transforms.rotation * Math.PI) / 180);
              ctx.scale(state.transforms.scale, state.transforms.scale);
              ctx.drawImage(this.tokenBuffer, -this.tokenBuffer.width/2, -this.tokenBuffer.height/2);
@@ -872,12 +1005,40 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         }
 
         // 3. Draw The Frame (The Ring)
-        if (this.frameBuffer) {
+        // SKIP if Exporting OR if using Foundry Ring (since we only show guide)
+        const usingFoundryRing = this.uiState.useFoundryRing;
+        
+        // VISUAL GUIDE: If using Foundry Ring use dashed line
+        if (usingFoundryRing && !isExport) {
+             ctx.save();
+             ctx.translate(canvasSize/2 + fState.transforms.x, canvasSize/2 + fState.transforms.y);
+             ctx.rotate((fState.transforms.rotation * Math.PI) / 180);
+             ctx.scale(fState.transforms.scale, fState.transforms.scale);
+             
+             ctx.beginPath();
+             ctx.strokeStyle = "rgba(255, 255, 255, 0.8)";
+             ctx.lineWidth = 2;
+             ctx.setLineDash([5, 5]); // Dashed Line
+             ctx.arc(0, 0, size/2 - 2, 0, Math.PI * 2); // Slightly inside
+             ctx.stroke();
+             
+             ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
+             ctx.lineWidth = 1;
+             ctx.setLineDash([]); // Solid contrast
+             ctx.stroke();
+             
+             ctx.restore();
+        }
+
+        // Only draw the ACTUAL frame buffer if we are NOT using Foundry Ring
+        // (And implicitly not exporting with skipFrame logic, but usingFoundryRing covers both now)
+        if (this.frameBuffer && !usingFoundryRing) {
             ctx.save();
-            ctx.translate(size/2 + fState.transforms.x, size/2 + fState.transforms.y);
+            ctx.translate(canvasSize/2 + fState.transforms.x, canvasSize/2 + fState.transforms.y);
             ctx.rotate((fState.transforms.rotation * Math.PI) / 180);
             ctx.scale(fState.transforms.scale, fState.transforms.scale);
             // Draw Buffer instead of Image
+            // We draw it at SIZE (Rez), centered.
             ctx.drawImage(this.frameBuffer, -size/2, -size/2, size, size); 
             ctx.restore();
         }
@@ -889,8 +1050,8 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
              
              // Temp Canvas for Outer Character
              const charC = document.createElement("canvas");
-             charC.width = size;
-             charC.height = size;
+             charC.width = canvasSize;
+             charC.height = canvasSize;
              const charCtx = charC.getContext("2d");
              
              // Draw Character + Shadow (Same logic as above)
@@ -899,7 +1060,7 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
                  charCtx.shadowColor = state.fx.shadowColor;
                  charCtx.shadowBlur = state.fx.shadowBlur;
              }
-             charCtx.translate(size/2 + state.transforms.x, size/2 + state.transforms.y);
+             charCtx.translate(canvasSize/2 + state.transforms.x, canvasSize/2 + state.transforms.y);
              charCtx.rotate((state.transforms.rotation * Math.PI) / 180);
              charCtx.scale(state.transforms.scale, state.transforms.scale);
              charCtx.drawImage(this.tokenBuffer, -this.tokenBuffer.width/2, -this.tokenBuffer.height/2);
@@ -907,7 +1068,15 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
              
              // Apply MASK (Destination-In) using ONLY the Brush Buffer
              charCtx.globalCompositeOperation = "destination-in";
-             charCtx.drawImage(this.popOutBuffer, 0, 0, size, size);
+             // PopOut Buffer defaults to Resolution Size currently. 
+             // We align it to center.
+             // Ensure PopOut Buffer matches Canvas Size (Resize clears it!)
+             if (this.popOutBuffer.width !== canvasSize || this.popOutBuffer.height !== canvasSize) {
+                 this.popOutBuffer.width = canvasSize;
+                 this.popOutBuffer.height = canvasSize;
+             }
+             
+             charCtx.drawImage(this.popOutBuffer, 0, 0);
              
              // Draw Result onto Main Canvas (Over Frame)
              ctx.drawImage(charC, 0, 0);
@@ -916,12 +1085,18 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         }
         
         // Pop-Out Mask Overlay (Visual Guide)
-        if (this.uiState.isPopOutActive && this.popOutBuffer) {
+        if (this.uiState.isPopOutActive && this.popOutBuffer && !isExport) {
             ctx.save();
             ctx.globalAlpha = 0.3;
-            ctx.drawImage(this.popOutBuffer, 0, 0, size, size);
+             // Ensure alignment (resize only if needed, though usually handled above)
+             if (this.popOutBuffer.width !== canvasSize) {
+                 this.popOutBuffer.width = canvasSize;
+                 this.popOutBuffer.height = canvasSize;
+             }
+             ctx.drawImage(this.popOutBuffer, 0, 0);
             ctx.restore();
         }
+
 
         ctx.restore();
     }
@@ -991,7 +1166,7 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             ctx.arc(cx, cy, Math.max(0, r), 0, Math.PI * 2);
             ctx.clip();
             
-            if (state.fx.backgroundColor && !this.uiState.isEraserActive) {
+            if (state.fx.backgroundColor) {
                  ctx.fillStyle = state.fx.backgroundColor;
                  ctx.fill();
             }
@@ -1070,8 +1245,10 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         if (!this.canvasAvatar || !this.ctxAvatar) return;
         const ctx = this.ctxAvatar;
         const state = this.uiState.avatar;
+        
+        const ratio = this.uiState.avatarAspectRatio || 1.0;
         const width = this.resolution;
-        const height = this.resolution * 1.5; // 2:3 Aspect
+        const height = this.resolution * ratio;
         
         if (this.canvasAvatar.width !== width || this.canvasAvatar.height !== height) {
              this.canvasAvatar.width = width;
@@ -1094,6 +1271,7 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             ctx.rect(0, 0, width, height);
             ctx.clip();
             
+            // Center is width/2, height/2
             ctx.translate(width/2 + state.transforms.x, height/2 + state.transforms.y);
             ctx.rotate((state.transforms.rotation * Math.PI) / 180);
             ctx.scale(state.transforms.scale, state.transforms.scale);
@@ -1116,8 +1294,8 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         this._activeDragView = viewName;
         this._dragStart = { x: event.clientX, y: event.clientY };
         
-        // Save history if we are about to Erase (Left Click only) or Paint PopOut
-        if ((this.uiState.isEraserActive || this.uiState.isPopOutActive) && (event.buttons === 1)) {
+        // Save history if we are about to Erase (Left Click only) or Paint PopOut or Paint Color
+        if ((this.uiState.isEraserActive || this.uiState.isPopOutActive || this.uiState.isPaintActive) && (event.buttons === 1)) {
             // We need to know WHICH buffer we are about to modify to save IT
             let targetLayer = 'token'; // default
             if (viewName === 'token') {
@@ -1158,6 +1336,46 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         
         // Double Check: If we are hovering an input, ignore (Safety Net)
         if (event.target.tagName === 'INPUT' || event.target.closest('.control-group')) return;
+
+        // 0.5 paint brush (Color)
+        if (this.uiState.isPaintActive && (event.buttons === 1)) {
+             event.preventDefault();
+             // Only works on Token View
+             if (this.uiState.activeView !== 'token') return;
+             
+             if (!this.canvasToken || !this.paintBuffer) return;
+             const r = this.canvasToken.getBoundingClientRect();
+             const mx = event.clientX - r.left;
+             const my = event.clientY - r.top;
+             
+             // Map Mouse -> Canvas Coords
+             const width = this.canvasToken.width;
+             const height = this.canvasToken.height;
+             const scaleX = width / r.width;
+             const scaleY = height / r.height;
+             
+             const canvasX = mx * scaleX;
+             const canvasY = my * scaleY;
+             
+             const ctx = this.paintBuffer.getContext("2d");
+             ctx.save();
+             
+             // MODE LOGIC
+             if (this.uiState.paintMode === 'remove') {
+                 ctx.globalCompositeOperation = "destination-out"; // Erase paint
+             } else {
+                 ctx.globalCompositeOperation = "source-over"; // Add paint
+                 ctx.fillStyle = this.uiState.paintColor;
+             }
+             
+             ctx.beginPath();
+             ctx.arc(canvasX, canvasY, this.uiState.paintSize / 2, 0, Math.PI * 2);
+             ctx.fill();
+             ctx.restore();
+             
+             this.drawAll();
+             return;
+        }
 
         // 0. POP-OUT BRUSH (Handle if Token View + PopOut Active + Button Down)
         // This is a "Masking" brush. Painting White reveals the image on top of frame.
@@ -1270,9 +1488,20 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
         const canvasY = mouseY * scaleY;
 
         // Map Canvas -> Source Image Coordinates (Inverse Transform)
-        // Resolution/Reference Size
-        const cx = (viewName === 'token') ? (this.resolution / 2) : (this.resolution / 2);
-        const cy = (viewName === 'token') ? (this.resolution / 2) : (this.resolution * 1.5 / 2);
+        // Center depends on View Size
+        let cx = 0;
+        let cy = 0;
+        
+        if (viewName === 'token') {
+             const ringScale = this.uiState.dynamicRingScale || 1.0;
+             cx = (this.resolution * ringScale) / 2;
+             cy = (this.resolution * ringScale) / 2;
+        } else {
+             // Avatar
+             const ratio = this.uiState.avatarAspectRatio || 1.0;
+             cx = this.resolution / 2;
+             cy = (this.resolution * ratio) / 2;
+        }
 
         // Apply Inverse Translation
         let dx = canvasX - (cx + state.transforms.x);
@@ -1657,12 +1886,18 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             frameData = this.frameBuffer.getContext("2d").getImageData(0, 0, this.frameBuffer.width, this.frameBuffer.height);
         }
 
+        let paintData = null;
+        if (this.paintBuffer) {
+            paintData = this.paintBuffer.getContext("2d").getImageData(0, 0, this.paintBuffer.width, this.paintBuffer.height);
+        }
+
         this.history.push({
             tokenData,
             avatarData,
             bgData,
             popData,
             frameData,
+            paintData,
             state: stateSnapshot
         });
         
@@ -1700,6 +1935,10 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
 
         if (step.popData && this.popOutBuffer) {
             this.popOutBuffer.getContext("2d").putImageData(step.popData, 0, 0);
+        }
+
+        if (step.paintData && this.paintBuffer) {
+            this.paintBuffer.getContext("2d").putImageData(step.paintData, 0, 0);
         }
 
         this.drawAll();
@@ -1777,8 +2016,8 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
     
     async _onPickFrameFile() {
         try {
-            const FilePicker = foundry.applications.apps.FilePicker || FilePicker; // Fallback for V12/older if needed, but V13 prefers namespaced
-            new FilePicker({
+            const FilePickerClass = FilePicker; // Fallback for V12/older if needed, but V13 prefers namespaced
+            new FilePickerClass({
                 type: "image",
                 callback: (path) => {
                      this.uiState.token.frame.path = path;
@@ -1846,16 +2085,80 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
                 this._isLocalSource = false;
             }
 
-            const blob = await new Promise(resolve => this.canvasToken.toBlob(resolve, "image/webp", 0.9));
+            const newScale = this.uiState.dynamicRingScale || 1.0;
+            
+            // Create Export Blob using Temp Canvas
+            // This ensures we can skip the ring if needed
+            const size = Math.round(this.resolution * newScale);
+            const tempC = document.createElement("canvas");
+            tempC.width = size;
+            tempC.height = size;
+            const tempCtx = tempC.getContext("2d");
+            
+            // Draw Scoped
+            this.drawTokenSandwich(tempCtx, true);
+
+            const blob = await new Promise(resolve => tempC.toBlob(resolve, "image/webp", 0.9));
             const fileName = `token_${this.actor.id}_${Date.now()}.webp`;
             const file = new File([blob], fileName, { type: "image/webp" });
             const result = await this._uploadFile(file);
             
             // Update Prototype & Active Tokens
-            await this.actor.update({ "prototypeToken.texture.src": result });
+            const updates = {
+                "prototypeToken.texture.src": result
+            };
+            
+            // Get Frame Scale (default 1.0)
+            const fScale = this.uiState.token.frame.transforms.scale || 1.0;
+
+            // Auto-Configure Dynamic Token Ring if enabled
+            if (this.uiState.useFoundryRing) {
+                 // DYNAMIC RING MODE:
+                 // "Both values must match" - User Request
+                 
+                 // 1. Enable Ring
+                 updates["prototypeToken.ring.enabled"] = true;
+                 
+                 // 2. Set Subject Scale (to match our padding)
+                 updates["prototypeToken.ring.subject.scale"] = newScale;
+                 
+                 // 3. Set Global Scale to MATCH Subject Scale
+                 // User manual testing confirms this is required for correct fit.
+                 updates["prototypeToken.texture.scaleX"] = newScale;
+                 updates["prototypeToken.texture.scaleY"] = newScale;
+                 
+            } else {
+                 // BAKED RING MODE:
+                 // 1. Disable Ring
+                 updates["prototypeToken.ring.enabled"] = false;
+                 
+                 // 2. Apply Scale to Global Token
+                 // This makes the whole image (Ring + Art) larger so the Ring (which is smaller in the image) matches the grid.
+                 updates["prototypeToken.texture.scaleX"] = newScale;
+                 updates["prototypeToken.texture.scaleY"] = newScale;
+            }
+            
+            await this.actor.update(updates);
+            
             const activeTokens = this.actor.getActiveTokens();
-            const tokenUpdates = activeTokens.map(t => ({ _id: t.id, "texture.src": result }));
-            if (tokenUpdates.length > 0) await canvas.scene.updateEmbeddedDocuments("Token", tokenUpdates);
+            const tokenUpdates = activeTokens.map(t => {
+                const update = { 
+                    _id: t.id, 
+                    "texture.src": result
+                };
+                
+                if (this.uiState.useFoundryRing) {
+                    update["ring.enabled"] = true;
+                    update["ring.subject.scale"] = newScale;
+                    update["texture.scaleX"] = newScale;
+                    update["texture.scaleY"] = newScale;
+                } else {
+                    update["ring.enabled"] = false;
+                    update["texture.scaleX"] = newScale;
+                    update["texture.scaleY"] = newScale;
+                }
+                return update;
+            });
             
             if (tokenUpdates.length > 0) await canvas.scene.updateEmbeddedDocuments("Token", tokenUpdates);
             
@@ -1943,9 +2246,7 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             
             // Update Actor Image
             await this.actor.update({ "img": result });
-            
-            await this.actor.update({ "img": result });
-            
+
             // ui.notifications.info("Avatar Updated!");
              // Save state but don't close
             await this.actor.setFlag("phils-token-studio", "lastState", this.uiState);
@@ -1955,13 +2256,88 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
             ui.notifications.error("Avatar Update Failed.");
         }
     }
+
+    _onDeleteBackground(event) {
+        if (this.uiState.token.background) {
+            this.uiState.token.background.active = false;
+            this.uiState.token.background.path = null;
+        }
+        this.backgroundBuffer = null;
+        this.drawToken();
+        this.render();
+    }
+
+    _onUploadPortrait(event) {
+        this.uiState.activeView = 'token'; 
+        this.uiState.activeLayer = 'character'; // Force character layer
+        this._onPickSourceFile();
+    }
+
+    _onChangeAvatarRatio(event) {
+        const val = parseFloat(event.target.value);
+        this.uiState.avatarAspectRatio = val;
+        this.drawAvatar(); 
+    }
+
+    _onChangeRingScale(event) {
+        const val = parseFloat(event.target.value);
+        const oldScale = this.uiState.dynamicRingScale || 1.0;
+        this.uiState.dynamicRingScale = val;
+        
+        // Resize PopOut Buffer if it exists
+        if (this.popOutBuffer) {
+             const oldSize = this.popOutBuffer.width;
+             const newSize = Math.round(this.resolution * val);
+             
+             // Create temp buffer to save content
+             const temp = document.createElement("canvas");
+             temp.width = oldSize;
+             temp.height = oldSize;
+             const tCtx = temp.getContext("2d");
+             tCtx.drawImage(this.popOutBuffer, 0, 0);
+             
+             // Resize Main Buffer
+             this.popOutBuffer.height = newSize;
+             const ctx = this.popOutBuffer.getContext("2d");
+             
+             // Redraw centered
+             const off = (newSize - oldSize) / 2;
+             ctx.drawImage(temp, off, off);
+        }
+
+        // Resize Paint Buffer (Same Logic)
+        if (this.paintBuffer) {
+             const oldSize = this.paintBuffer.width;
+             const newSize = Math.round(this.resolution * val);
+             
+             const temp = document.createElement("canvas");
+             temp.width = oldSize;
+             temp.height = oldSize;
+             const tCtx = temp.getContext("2d");
+             tCtx.drawImage(this.paintBuffer, 0, 0);
+             
+             this.paintBuffer.width = newSize;
+             this.paintBuffer.height = newSize;
+             const ctx = this.paintBuffer.getContext("2d");
+             
+             const off = (newSize - oldSize) / 2;
+             ctx.drawImage(temp, off, off);
+        }
+        
+        this.drawToken(); 
+    }
     
+    _onToggleFoundryRing(event) {
+        this.uiState.useFoundryRing = event.target.checked;
+        this.drawAll(); // Re-draw to show/hide the dashed guide
+    }
+
     async _uploadFile(file) {
         const parts = this.storagePath.split("/");
         let currentPath = "";
         
         // Use correct namespace
-        const FP = foundry.applications.apps.FilePicker;
+        const FP = foundry.applications?.apps?.FilePicker || FilePicker;
 
         for (const part of parts) {
             if (!part) continue;
@@ -2035,6 +2411,14 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
                  drafts.popout = path;
             }
 
+            // 3. Save Paint Buffer (Paint State)
+            if (this.paintBuffer && this._bufferHasContent(this.paintBuffer)) {
+                 const blob = await new Promise(r => this.paintBuffer.toBlob(r, "image/webp", 0.9));
+                 const file = new File([blob], `draft_paint_${this.actor.id}.webp`, { type: "image/webp" });
+                 const path = await this._uploadFile(file);
+                 drafts.paint = path;
+            }
+
             // Update State
             this.uiState.drafts = drafts;
             
@@ -2091,6 +2475,10 @@ export class QuickTokenStudio extends HandlebarsApplicationMixin(ApplicationV2) 
 
         if (this.uiState.drafts.popout && this.popOutBuffer) {
             await loadBuffer(this.uiState.drafts.popout, this.popOutBuffer);
+        }
+
+        if (this.uiState.drafts.paint && this.paintBuffer) {
+            await loadBuffer(this.uiState.drafts.paint, this.paintBuffer);
         }
         
         this.drawAll();

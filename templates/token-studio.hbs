@@ -4,14 +4,14 @@
     <header class="app-header">
         <h1><i class="fas fa-user-circle"></i> Token Studio</h1>
         <div class="header-actions">
-            <button type="button" data-action="undo" title="Undo Last Step">
+            <button type="button" data-action="undo" title="{{localize 'TOKEN-STUDIO.Undo'}}">
                 <i class="fas fa-undo"></i>
             </button>
-            <button type="button" data-action="saveAvatar" title="Update Avatar">
-                <i class="fas fa-user-circle"></i> Save Avatar
+            <button type="button" data-action="saveAvatar" title="{{localize 'TOKEN-STUDIO.SaveAvatar'}}">
+                <i class="fas fa-user-circle"></i> {{localize 'TOKEN-STUDIO.SaveAvatar'}}
             </button>
-            <button type="button" data-action="saveToken" title="Update Token">
-                 <i class="fas fa-chess-pawn"></i> Save Token
+            <button type="button" data-action="saveToken" title="{{localize 'TOKEN-STUDIO.SaveToken'}}">
+                 <i class="fas fa-chess-pawn"></i> {{localize 'TOKEN-STUDIO.SaveToken'}}
             </button>
         </div>
     </header>
@@ -27,10 +27,10 @@
             <div class="empty-state">
                 <div class="drop-message">
                     <i class="fas fa-cloud-upload-alt"></i>
-                    <p>Drag & Drop Image Here</p>
-                    <p class="or-divider">- OR -</p>
+                    <p>{{localize 'TOKEN-STUDIO.DragDropMessage'}}</p>
+                    <p class="or-divider">{{localize 'TOKEN-STUDIO.OrDivider'}}</p>
                     <button type="button" class="btn-main" data-action="pickSource">
-                        <i class="fas fa-folder-open"></i> Select Image
+                        <i class="fas fa-folder-open"></i> {{localize 'TOKEN-STUDIO.SelectImage'}}
                     </button>
                 </div>
             </div>
@@ -40,11 +40,35 @@
             <div class="view-controls">
                 <div class="view-toggle">
                     <button type="button" class="{{#if isAvatarActive}}active{{/if}}" data-action="setView" data-view="avatar">
-                        <i class="fas fa-portrait"></i> Avatar
+                        <i class="fas fa-portrait"></i> {{localize 'TOKEN-STUDIO.ViewAvatar'}}
                     </button>
                     <button type="button" class="{{#if isTokenActive}}active{{/if}}" data-action="setView" data-view="token">
-                        <i class="fas fa-user-circle"></i> Token
+                        <i class="fas fa-user-circle"></i> {{localize 'TOKEN-STUDIO.ViewToken'}}
                     </button>
+                </div>
+            </div>
+
+            <!-- Avatar Options (Visible only in Avatar View) -->
+             <div class="view-options {{#unless isAvatarActive}}hidden{{/unless}}">
+                <label>{{localize 'TOKEN-STUDIO.AspectRatio'}}:</label>
+                <select name="avatarAspectRatio" data-action="changeAvatarRatio">
+                    <option value="1" {{#if (eq avatarAspectRatio 1)}}selected{{/if}}>{{localize 'TOKEN-STUDIO.RatioSquare'}}</option>
+                    <option value="1.5" {{#if (eq avatarAspectRatio 1.5)}}selected{{/if}}>{{localize 'TOKEN-STUDIO.RatioPortrait'}}</option>
+                </select>
+            </div>
+
+            <!-- Token Options (Visible only in Token View) -->
+             <div class="view-options {{#unless isTokenActive}}hidden{{/unless}}">
+                <label title="{{localize 'TOKEN-STUDIO.ExportPaddingTitle'}}">{{localize 'TOKEN-STUDIO.ExportPadding'}}:</label>
+                <select name="dynamicRingScale" data-action="changeRingScale" title="{{localize 'TOKEN-STUDIO.RingScaleTitle'}}">
+                    <option value="1" {{#if (eq dynamicRingScale 1)}}selected{{/if}}>{{localize 'TOKEN-STUDIO.ScaleNone'}}</option>
+                    <option value="1.2" {{#if (eq dynamicRingScale 1.2)}}selected{{/if}}>{{localize 'TOKEN-STUDIO.ScaleSmall'}}</option>
+                    <option value="1.5" {{#if (eq dynamicRingScale 1.5)}}selected{{/if}}>{{localize 'TOKEN-STUDIO.ScaleMedium'}}</option>
+                    <option value="2.0" {{#if (eq dynamicRingScale 2.0)}}selected{{/if}}>{{localize 'TOKEN-STUDIO.ScaleLarge'}}</option>
+                </select>
+                <div class="checkbox-label" title="{{localize 'TOKEN-STUDIO.UseDynamicRingTitle'}}">
+                    <input type="checkbox" data-action="toggleFoundryRing" {{#if useFoundryRing}}checked{{/if}}>
+                    <span>{{localize 'TOKEN-STUDIO.UseDynamicRing'}}</span>
                 </div>
             </div>
 
@@ -62,7 +86,7 @@
                 </div>
 
                 <!-- Floating Auto-Fit -->
-                <button type="button" class="floating-btn" data-action="autoFit" title="Auto-Fit Image">
+                <button type="button" class="floating-btn" data-action="autoFit" title="{{localize 'TOKEN-STUDIO.AutoFit'}}">
                     <i class="fas fa-compress-arrows-alt"></i>
                 </button>
             </div>
@@ -73,8 +97,8 @@
             
             <!-- Controls (Tabbed) -->
             <nav class="tabs-nav">
-                <a class="item {{#if isTabTransform}}active{{/if}}" data-tab="transform"><i class="fas fa-sliders-h"></i> Edit</a>
-                <a class="item {{#if isTabStyle}}active{{/if}}" data-tab="style"><i class="fas fa-paint-brush"></i> Style</a>
+                <a class="item {{#if isTabTransform}}active{{/if}}" data-tab="transform"><i class="fas fa-sliders-h"></i> {{localize 'TOKEN-STUDIO.TabEdit'}}</a>
+                <a class="item {{#if isTabStyle}}active{{/if}}" data-tab="style"><i class="fas fa-paint-brush"></i> {{localize 'TOKEN-STUDIO.TabStyle'}}</a>
             </nav>
 
             <section class="tab-content">
@@ -89,25 +113,25 @@
                         <div class="slot-group {{#if isFrameLayer}}active-slot{{/if}}">
                             <div class="slot-header" onclick="this.querySelector('input').click()">
                                 <input type="radio" name="layer" value="frame" data-action="toggle-layer" {{#if isFrameLayer}}checked{{/if}}>
-                                <span><i class="fas fa-border-style"></i> Frame (Top)</span>
+                                <span><i class="fas fa-border-style"></i> {{localize 'TOKEN-STUDIO.FrameTop'}}</span>
                             </div>
                             
                             {{#if isFrameLayer}}
                             <div class="slot-content">
                                 <div class="control-group">
-                                     <label>Scale <input type="number" class="val-input" data-target="scale" value="{{transforms.scale}}" step="0.05"></label>
-                                     <input type="range" name="scale" min="0.1" max="5" step="0.05" value="{{transforms.scale}}">
+                                    <label>{{localize 'TOKEN-STUDIO.Scale'}} <input type="number" class="val-input" data-target="scale" value="{{transforms.scale}}" step="0.05"></label>
+                                    <input type="range" name="scale" min="0.1" max="5" step="0.05" value="{{transforms.scale}}">
                                 </div>
                                 <div class="control-group">
-                                    <label>X Position <input type="number" class="val-input" data-target="x" value="{{transforms.x}}"></label>
+                                    <label>{{localize 'TOKEN-STUDIO.XPosition'}} <input type="number" class="val-input" data-target="x" value="{{transforms.x}}"></label>
                                     <input type="range" name="x" min="-500" max="500" value="{{transforms.x}}">
                                 </div>
                                 <div class="control-group">
-                                    <label>Y Position <input type="number" class="val-input" data-target="y" value="{{transforms.y}}"></label>
+                                    <label>{{localize 'TOKEN-STUDIO.YPosition'}} <input type="number" class="val-input" data-target="y" value="{{transforms.y}}"></label>
                                     <input type="range" name="y" min="-500" max="500" value="{{transforms.y}}">
                                 </div>
                                 <div class="control-group">
-                                    <label>Rotation <input type="number" class="val-input" data-target="rotation" value="{{transforms.rotation}}">°</label>
+                                    <label>{{localize 'TOKEN-STUDIO.Rotation'}} <input type="number" class="val-input" data-target="rotation" value="{{transforms.rotation}}">°</label>
                                     <input type="range" name="rotation" min="-180" max="180" value="{{transforms.rotation}}">
                                 </div>
                             </div>
@@ -118,26 +142,32 @@
                         <div class="slot-group {{#if isCharacterLayer}}active-slot{{/if}}">
                             <div class="slot-header" onclick="this.querySelector('input').click()">
                                 <input type="radio" name="layer" value="character" data-action="toggle-layer" {{#if isCharacterLayer}}checked{{/if}}>
-                                <span><i class="fas fa-user"></i> Portrait (Middle)</span>
+                                <span><i class="fas fa-user"></i> {{localize 'TOKEN-STUDIO.PortraitMiddle'}}</span>
                             </div>
                             
                             {{#if isCharacterLayer}}
                             <div class="slot-content">
+                                <div class="control-group">
+                                    <button type="button" class="full-width" data-action="uploadPortrait" title="{{localize 'TOKEN-STUDIO.UploadPortrait'}}">
+                                        <i class="fas fa-user-circle"></i> {{localize 'TOKEN-STUDIO.UploadPortrait'}}
+                                    </button>
+                                </div>
+                                <!-- Transforms -->
                                 <!-- Transforms -->
                                 <div class="control-group">
-                                     <label>Scale <input type="number" class="val-input" data-target="scale" value="{{transforms.scale}}" step="0.05"></label>
-                                     <input type="range" name="scale" min="0.1" max="5" step="0.05" value="{{transforms.scale}}">
+                                    <label>{{localize 'TOKEN-STUDIO.Scale'}} <input type="number" class="val-input" data-target="scale" value="{{transforms.scale}}" step="0.05"></label>
+                                    <input type="range" name="scale" min="0.1" max="5" step="0.05" value="{{transforms.scale}}">
                                 </div>
                                 <div class="control-group">
-                                    <label>X Position <input type="number" class="val-input" data-target="x" value="{{transforms.x}}"></label>
+                                    <label>{{localize 'TOKEN-STUDIO.XPosition'}} <input type="number" class="val-input" data-target="x" value="{{transforms.x}}"></label>
                                     <input type="range" name="x" min="-500" max="500" value="{{transforms.x}}">
                                 </div>
                                 <div class="control-group">
-                                    <label>Y Position <input type="number" class="val-input" data-target="y" value="{{transforms.y}}"></label>
+                                    <label>{{localize 'TOKEN-STUDIO.YPosition'}} <input type="number" class="val-input" data-target="y" value="{{transforms.y}}"></label>
                                     <input type="range" name="y" min="-500" max="500" value="{{transforms.y}}">
                                 </div>
                                 <div class="control-group">
-                                    <label>Rotation <input type="number" class="val-input" data-target="rotation" value="{{transforms.rotation}}">°</label>
+                                    <label>{{localize 'TOKEN-STUDIO.Rotation'}} <input type="number" class="val-input" data-target="rotation" value="{{transforms.rotation}}">°</label>
                                     <input type="range" name="rotation" min="-180" max="180" value="{{transforms.rotation}}">
                                 </div>
                             </div>
@@ -148,31 +178,34 @@
                         <div class="slot-group {{#if isBackgroundLayer}}active-slot{{/if}}">
                             <div class="slot-header" onclick="this.querySelector('input').click()">
                                 <input type="radio" name="layer" value="background" data-action="toggle-layer" {{#if isBackgroundLayer}}checked{{/if}}>
-                                <span><i class="fas fa-image"></i> Background (Bottom)</span>
+                                <span><i class="fas fa-image"></i> {{localize 'TOKEN-STUDIO.BackgroundBottom'}}</span>
                             </div>
 
                             {{#if isBackgroundLayer}}
                             <div class="slot-content">
-                                <div class="control-group">
-                                    <button type="button" id="btn-upload-background" class="full-width" data-action="uploadBackground">
-                                        <i class="fas fa-upload"></i> Upload Background Image
+                                <div class="control-group" style="display:flex; gap:5px;">
+                                    <button type="button" id="btn-upload-background" style="flex:1;" data-action="uploadBackground">
+                                        <i class="fas fa-upload"></i> {{localize 'TOKEN-STUDIO.UploadImage'}}
+                                    </button>
+                                     <button type="button" class="btn-xs danger" data-action="deleteBackground" title="{{localize 'TOKEN-STUDIO.DeleteBackground'}}">
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
                                 
                                 <div class="control-group">
-                                     <label>Scale <input type="number" class="val-input" data-target="scale" value="{{transforms.scale}}" step="0.05"></label>
-                                     <input type="range" name="scale" min="0.1" max="5" step="0.05" value="{{transforms.scale}}">
+                                    <label>{{localize 'TOKEN-STUDIO.Scale'}} <input type="number" class="val-input" data-target="scale" value="{{transforms.scale}}" step="0.05"></label>
+                                    <input type="range" name="scale" min="0.1" max="5" step="0.05" value="{{transforms.scale}}">
                                 </div>
                                 <div class="control-group">
-                                    <label>X Position <input type="number" class="val-input" data-target="x" value="{{transforms.x}}"></label>
+                                    <label>{{localize 'TOKEN-STUDIO.XPosition'}} <input type="number" class="val-input" data-target="x" value="{{transforms.x}}"></label>
                                     <input type="range" name="x" min="-500" max="500" value="{{transforms.x}}">
                                 </div>
                                 <div class="control-group">
-                                    <label>Y Position <input type="number" class="val-input" data-target="y" value="{{transforms.y}}"></label>
+                                    <label>{{localize 'TOKEN-STUDIO.YPosition'}} <input type="number" class="val-input" data-target="y" value="{{transforms.y}}"></label>
                                     <input type="range" name="y" min="-500" max="500" value="{{transforms.y}}">
                                 </div>
                                 <div class="control-group">
-                                    <label>Rotation <input type="number" class="val-input" data-target="rotation" value="{{transforms.rotation}}">°</label>
+                                    <label>{{localize 'TOKEN-STUDIO.Rotation'}} <input type="number" class="val-input" data-target="rotation" value="{{transforms.rotation}}">°</label>
                                     <input type="range" name="rotation" min="-180" max="180" value="{{transforms.rotation}}">
                                 </div>
                             </div>
@@ -182,15 +215,15 @@
                         {{else}}
                         <!-- Avatar Controls (Simplified) -->
                         <div class="control-group">
-                            <label>Scale <input type="number" class="val-input" data-target="scale" value="{{transforms.scale}}" step="0.05"></label>
+                            <label>{{localize 'TOKEN-STUDIO.Scale'}} <input type="number" class="val-input" data-target="scale" value="{{transforms.scale}}" step="0.05"></label>
                             <input type="range" name="scale" min="0.1" max="5" step="0.05" value="{{transforms.scale}}">
                         </div>
                          <div class="control-group">
-                            <label>X Position <input type="number" class="val-input" data-target="x" value="{{transforms.x}}"></label>
+                            <label>{{localize 'TOKEN-STUDIO.XPosition'}} <input type="number" class="val-input" data-target="x" value="{{transforms.x}}"></label>
                             <input type="range" name="x" min="-500" max="500" value="{{transforms.x}}">
                         </div>
                         <div class="control-group">
-                            <label>Y Position <input type="number" class="val-input" data-target="y" value="{{transforms.y}}"></label>
+                            <label>{{localize 'TOKEN-STUDIO.YPosition'}} <input type="number" class="val-input" data-target="y" value="{{transforms.y}}"></label>
                             <input type="range" name="y" min="-500" max="500" value="{{transforms.y}}">
                         </div>
                         {{/if}}
@@ -201,15 +234,15 @@
                 <div class="tab {{#if isTabStyle}}active{{/if}}" data-tab="style">
                     <!-- Token Only Features -->
                     <div class="control-group {{#unless isTokenActive}}disabled{{/unless}}">
-                        <label>Frame Style</label>
+                        <label>{{localize 'TOKEN-STUDIO.FrameStyle'}}</label>
                          <div class="frame-selector compact-scroll">
                             <!-- Remove Frame (Deselect) -->
-                            <div class="frame-item remove-frame" data-action="removeFrame" title="No Frame (Deselect)">
+                            <div class="frame-item remove-frame" data-action="removeFrame" title="{{localize 'TOKEN-STUDIO.RemoveFrame'}}">
                                 <i class="fas fa-ban"></i>
                             </div>
                             
                             <!-- Trash Can (Drop Zone) -->
-                            <div class="frame-item trash-can" title="Drag Frame here to Delete">
+                            <div class="frame-item trash-can" title="{{localize 'TOKEN-STUDIO.TrashFrame'}}">
                                 <i class="fas fa-trash"></i>
                             </div>
                             
@@ -218,39 +251,33 @@
                                 <img src="{{this.path}}">
                             </div>
                             {{/each}}
-                            <div class="frame-item add-frame" data-action="pickFrameFile" title="Add Frame">
+                            <div class="frame-item add-frame" data-action="pickFrameFile" title="{{localize 'TOKEN-STUDIO.AddFrame'}}">
                                 <i class="fas fa-plus"></i>
                             </div>
                         </div>
                     </div>
 
-                    <div class="control-group">
-                        <label>Shadow Blur</label>
-                        <div class="slider-row">
-                            <input type="range" name="shadowBlur" min="0" max="50" value="{{fx.shadowBlur}}">
-                            <input type="number" class="val-input" data-target="shadowBlur" value="{{fx.shadowBlur}}">
-                        </div>
-                    </div>
+
 
                     <!-- Advanced Cutout Tools -->
                      <div class="control-group">
-                        <label>Tools (Cutout & Pop-Out)</label>
+                        <label>{{localize 'TOKEN-STUDIO.ToolsTitle'}}</label>
                         
                         <div class="tools-grid">
                             <!-- Tool 1: Eraser -->
                             <div class="tool-card {{#if isEraserActive}}active{{/if}}">
                                 <div class="tool-header">
-                                    <i class="fas fa-eraser"></i> Eraser
+                                    <i class="fas fa-eraser"></i> {{localize 'TOKEN-STUDIO.Eraser'}}
                                     <button type="button" class="tool-toggle {{#if isEraserActive}}active{{/if}}" data-action="toggleEraser">
-                                        {{#if isEraserActive}}ON{{else}}OFF{{/if}}
+                                        {{#if isEraserActive}}{{localize 'TOKEN-STUDIO.On'}}{{else}}{{localize 'TOKEN-STUDIO.Off'}}{{/if}}
                                     </button>
                                 </div>
                                 <div class="tool-body {{#unless isEraserActive}}disabled{{/unless}}">
                                     <div class="mode-switch">
-                                        <button type="button" class="mode-btn {{#if (eq eraserMode 'remove')}}active{{/if}}" data-action="setEraserMode" data-mode="remove" title="Remove (Erase)">
+                                        <button type="button" class="mode-btn {{#if (eq eraserMode 'remove')}}active{{/if}}" data-action="setEraserMode" data-mode="remove" title="{{localize 'TOKEN-STUDIO.Remove'}} (Erase)">
                                             <i class="fas fa-minus"></i>
                                         </button>
-                                        <button type="button" class="mode-btn {{#if (eq eraserMode 'add')}}active{{/if}}" data-action="setEraserMode" data-mode="add" title="Add (Restore)">
+                                        <button type="button" class="mode-btn {{#if (eq eraserMode 'add')}}active{{/if}}" data-action="setEraserMode" data-mode="add" title="{{localize 'TOKEN-STUDIO.Add'}} (Restore)">
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </div>
@@ -264,17 +291,17 @@
                             <!-- Tool 2: Pop-Out Brush -->
                             <div class="tool-card {{#if isPopOutActive}}active{{/if}}">
                                 <div class="tool-header">
-                                    <i class="fas fa-magic"></i> Pop-Out
+                                    <i class="fas fa-magic"></i> {{localize 'TOKEN-STUDIO.PopOut'}}
                                     <button type="button" class="tool-toggle {{#if isPopOutActive}}active{{/if}}" data-action="togglePopout">
-                                        {{#if isPopOutActive}}ON{{else}}OFF{{/if}}
+                                        {{#if isPopOutActive}}{{localize 'TOKEN-STUDIO.On'}}{{else}}{{localize 'TOKEN-STUDIO.Off'}}{{/if}}
                                     </button>
                                 </div>
                                 <div class="tool-body {{#unless isPopOutActive}}disabled{{/unless}}">
                                      <div class="mode-switch">
-                                        <button type="button" class="mode-btn {{#if (eq popOutMode 'add')}}active{{/if}}" data-action="setPopOutMode" data-mode="add" title="Add (Reveal)">
+                                        <button type="button" class="mode-btn {{#if (eq popOutMode 'add')}}active{{/if}}" data-action="setPopOutMode" data-mode="add" title="{{localize 'TOKEN-STUDIO.Add'}} (Reveal)">
                                             <i class="fas fa-plus"></i>
                                         </button>
-                                        <button type="button" class="mode-btn {{#if (eq popOutMode 'remove')}}active{{/if}}" data-action="setPopOutMode" data-mode="remove" title="Remove (Hide)">
+                                        <button type="button" class="mode-btn {{#if (eq popOutMode 'remove')}}active{{/if}}" data-action="setPopOutMode" data-mode="remove" title="{{localize 'TOKEN-STUDIO.Remove'}} (Hide)">
                                             <i class="fas fa-minus"></i>
                                         </button>
                                     </div>
@@ -282,8 +309,39 @@
                                         <input type="range" name="popOutSize" min="5" max="100" value="{{popOutSize}}">
                                         <input type="number" class="val-input" data-target="popOutSize" value="{{popOutSize}}">
                                     </div>
-                                     <button type="button" class="btn-xs danger" data-action="clear-popout" title="Clear All Pop-Outs" style="margin-top:5px; width:100%;">
-                                        <i class="fas fa-trash"></i> Clear All
+                                     <button type="button" class="btn-xs danger" data-action="clear-popout" title="{{localize 'TOKEN-STUDIO.ClearAll'}}" style="margin-top:5px; width:100%;">
+                                        <i class="fas fa-trash"></i> {{localize 'TOKEN-STUDIO.ClearAll'}}
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Tool 3: Paint Brush -->
+                            <div class="tool-card {{#if isPaintActive}}active{{/if}}">
+                                <div class="tool-header">
+                                    <i class="fas fa-paint-brush"></i> {{localize 'TOKEN-STUDIO.Paint'}}
+                                    <button type="button" class="tool-toggle {{#if isPaintActive}}active{{/if}}" data-action="togglePaint">
+                                        {{#if isPaintActive}}{{localize 'TOKEN-STUDIO.On'}}{{else}}{{localize 'TOKEN-STUDIO.Off'}}{{/if}}
+                                    </button>
+                                </div>
+                                <div class="tool-body {{#unless isPaintActive}}disabled{{/unless}}">
+                                     <div class="mode-switch">
+                                        <button type="button" class="mode-btn {{#if (eq paintMode 'add')}}active{{/if}}" data-action="setPaintMode" data-mode="add" title="{{localize 'TOKEN-STUDIO.Paint'}}">
+                                            <i class="fas fa-paint-brush"></i>
+                                        </button>
+                                        <button type="button" class="mode-btn {{#if (eq paintMode 'remove')}}active{{/if}}" data-action="setPaintMode" data-mode="remove" title="{{localize 'TOKEN-STUDIO.Remove'}}">
+                                            <i class="fas fa-eraser"></i>
+                                        </button>
+                                    </div>
+                                    <div class="slider-row compact" style="margin-bottom: 5px;">
+                                        <input type="range" name="paintSize" min="5" max="100" value="{{paintSize}}">
+                                        <input type="number" class="val-input" data-target="paintSize" value="{{paintSize}}">
+                                    </div>
+                                    <div class="color-row compact" style="justify-content: space-between; margin-bottom: 5px;">
+                                        <label>{{localize 'TOKEN-STUDIO.Color'}}</label>
+                                        <input type="color" name="paintColor" value="{{paintColor}}" style="width: 50px; height: 25px;">
+                                    </div>
+                                     <button type="button" class="btn-xs danger" data-action="clear-paint" title="{{localize 'TOKEN-STUDIO.ClearPaint'}}" style="width:100%;">
+                                        <i class="fas fa-trash"></i> {{localize 'TOKEN-STUDIO.ClearPaint'}}
                                     </button>
                                 </div>
                             </div>
@@ -291,44 +349,52 @@
 
                     </div>
 
-                        <!-- Chroma Key -->
-                         <label class="sub-label">Chroma Key (Auto-Remove)</label>
+                         <!-- Chroma Key -->
+                        <label class="sub-label">{{localize 'TOKEN-STUDIO.ChromaKey'}}</label>
                          <div class="chroma-row" style="display: flex; gap: 5px; align-items: center;">
-                            <input type="color" id="chroma-color" value="{{chromaColor}}" title="Color to Remove">
+                            <input type="color" id="chroma-color" value="{{chromaColor}}" title="{{localize 'TOKEN-STUDIO.Color'}}">
                             <div class="slider-row compact" style="flex:1;">
-                                 <input type="range" id="chroma-tolerance" min="0" max="200" value="{{chromaTolerance}}" title="Tolerance">
+                                 <input type="range" id="chroma-tolerance" min="0" max="200" value="{{chromaTolerance}}" title="{{localize 'TOKEN-STUDIO.Tolerance'}}">
                                  <input type="number" class="val-input" data-target="chromaTolerance" value="{{chromaTolerance}}">
                              </div>
-                             <button type="button" class="btn-xs danger" data-action="apply-chroma" title="Apply Chroma Key">
+                             <button type="button" class="btn-xs danger" data-action="apply-chroma" title="{{localize 'TOKEN-STUDIO.ApplyChroma'}}">
                                 <i class="fas fa-check"></i>
                              </button>
                          </div>
 
                     <!-- Target Layer Selection (Synced with Main Tab) -->
                     <div class="control-group" style="margin-top: 15px; border-top: 1px solid #333; padding-top: 10px;">
-                        <label>Active Layer (Target)</label>
+                        <label>{{localize 'TOKEN-STUDIO.ActiveLayer'}}</label>
                         <div class="btn-group-row">
                             <button type="button" class="btn-layer {{#if isFrameLayer}}active{{/if}}" data-action="setLayer" data-layer="frame">
-                                <i class="fas fa-circle-notch"></i> Top (Frame)
+                                <i class="fas fa-circle-notch"></i> {{localize 'TOKEN-STUDIO.LayerFrame'}}
                             </button>
                             <button type="button" class="btn-layer {{#if isCharacterLayer}}active{{/if}}" data-action="setLayer" data-layer="character">
-                                <i class="fas fa-user"></i> Middle (Char)
+                                <i class="fas fa-user"></i> {{localize 'TOKEN-STUDIO.LayerChar'}}
                             </button>
                             <button type="button" class="btn-layer {{#if isBackgroundLayer}}active{{/if}}" data-action="setLayer" data-layer="background">
-                                <i class="fas fa-image"></i> Bottom (BG)
+                                <i class="fas fa-image"></i> {{localize 'TOKEN-STUDIO.LayerBG'}}
                             </button>
                         </div>
                     </div>
                     
-                    <div class="fx-grid">
-                         <div class="color-row">
-                            <label>Shadow Color</label>
-                            <color-picker name="shadowColor" value="{{fx.shadowColor}}"></color-picker>
+                    <div class="control-group" style="display: flex; gap: 10px; align-items: center;">
+                         <div class="color-row" style="flex: 1; display: flex; align-items: center; justify-content: space-between;">
+                            <label>{{localize 'TOKEN-STUDIO.ShadowColor'}}</label>
+                            <input type="color" name="shadowColor" value="{{fx.shadowColor}}" style="margin-left:5px;">
                          </div>
-                         <div class="color-row">
-                            <label>Background</label>
-                            <color-picker name="backgroundColor" value="{{fx.backgroundColor}}"></color-picker>
+                         <div class="color-row" style="flex: 1; display: flex; align-items: center; justify-content: space-between;">
+                            <label>{{localize 'TOKEN-STUDIO.Background'}}</label>
+                            <input type="color" name="backgroundColor" value="{{fx.backgroundColor}}" style="margin-left:5px;">
                          </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>{{localize 'TOKEN-STUDIO.ShadowBlur'}}</label>
+                        <div class="slider-row">
+                             <input type="range" name="shadowBlur" min="0" max="50" value="{{fx.shadowBlur}}">
+                             <input type="number" class="val-input" data-target="shadowBlur" value="{{fx.shadowBlur}}">
+                        </div>
                     </div>
                     
 

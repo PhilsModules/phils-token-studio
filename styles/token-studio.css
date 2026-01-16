@@ -2,7 +2,7 @@
 /*  Window & Layout                          */
 /* ----------------------------------------- */
 
-.quick-token-studio {
+.token-studio-app {
     --color-bg: #1a1a1a;
     --color-bg-dark: #121212;
     --color-bg-panel: #252525;
@@ -27,7 +27,7 @@
 /* ----------------------------------------- */
 /*  Header                                   */
 /* ----------------------------------------- */
-.app-header {
+.token-studio-app .app-header {
     background: #111;
     color: #fff;
     padding: 10px 15px;
@@ -38,7 +38,7 @@
     flex-shrink: 0;
 }
 
-.app-header h1 {
+.token-studio-app .app-header h1 {
     font-size: 16px;
     margin: 0;
     display: flex;
@@ -48,12 +48,12 @@
     font-weight: 700;
 }
 
-.header-actions {
+.token-studio-app .header-actions {
     display: flex;
     gap: 10px;
 }
 
-.header-actions button {
+.token-studio-app .header-actions button {
     background: #333;
     border: 1px solid #555;
     color: #eee;
@@ -66,13 +66,13 @@
     gap: 6px;
     transition: all 0.2s;
 }
-.header-actions button:hover {
+.token-studio-app .header-actions button:hover {
     background: var(--color-accent);
     border-color: var(--color-accent);
     color: #fff;
 }
 
-.studio-body {
+.token-studio-app .studio-body {
     display: flex;
     flex: 1;
     overflow: hidden; /* Prevent body scroll, use inner scroll */
@@ -82,7 +82,7 @@
 /*  Single Large View Preview Stage          */
 /* ----------------------------------------- */
 
-.preview-stage {
+.token-studio-app .preview-stage {
     flex: 1; /* Take remaining width */
     background: #111;
     position: relative;
@@ -94,7 +94,7 @@
 }
 
 /* View Switcher (Top Bar) */
-.view-controls {
+.token-studio-app .view-controls {
     flex: 0 0 40px; /* Slimmer top bar */
     display: flex;
     align-items: center;
@@ -104,7 +104,7 @@
     z-index: 10;
 }
 
-.view-toggle {
+.token-studio-app .view-toggle {
     display: flex;
     background: #222;
     padding: 2px;
@@ -112,7 +112,7 @@
     border: 1px solid #444;
 }
 
-.view-toggle button {
+.token-studio-app .view-toggle button {
     background: transparent;
     border: none;
     color: #888;
@@ -127,17 +127,17 @@
     gap: 6px;
 }
 
-.view-toggle button.active {
+.token-studio-app .view-toggle button.active {
     background: var(--color-accent);
     color: #fff;
     box-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
-.view-toggle button:hover:not(.active) {
+.token-studio-app .view-toggle button:hover:not(.active) {
     color: #ccc;
 }
 
 /* Canvas Stage */
-.canvas-stage {
+.token-studio-app .canvas-stage {
     flex: 1;
     display: flex;
     align-items: center;
@@ -155,7 +155,7 @@
     background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
 }
 
-.canvas-container {
+.token-studio-app .canvas-container {
     width: 100%;
     height: 100%;
     display: flex;
@@ -164,9 +164,9 @@
     padding: 40px; /* Dead zone padding */
     box-sizing: border-box;
 }
-.canvas-container.hidden { display: none; }
+.token-studio-app .canvas-container.hidden { display: none; }
 
-.canvas-container canvas {
+.token-studio-app .canvas-container canvas {
     display: block;
     max-width: 100%;
     max-height: 100%;
@@ -178,7 +178,7 @@
 
 
 /* Empty State */
-.empty-state {
+.token-studio-app .empty-state {
     position: absolute;
     top: 50px; /* Below header */
     left: 0; right: 0; bottom: 0;
@@ -189,15 +189,15 @@
     z-index: 20;
     pointer-events: none; /* Let clicks pass through to container */
 }
-.drop-message {
+.token-studio-app .drop-message {
     text-align: center;
     color: var(--color-text-muted);
 }
-.drop-message i { font-size: 48px; margin-bottom: 15px; display: block; opacity: 0.5; }
-.drop-message p { margin: 0; font-size: 16px; }
+.token-studio-app .drop-message i { font-size: 48px; margin-bottom: 15px; display: block; opacity: 0.5; }
+.token-studio-app .drop-message p { margin: 0; font-size: 16px; }
 
 /* Floating Fit Button */
-.floating-btn {
+.token-studio-app .floating-btn {
     position: absolute;
     bottom: 20px;
     right: 20px;
@@ -216,7 +216,7 @@
     padding: 0;
     transition: all 0.2s;
 }
-.floating-btn:hover {
+.token-studio-app .floating-btn:hover {
     background: var(--color-accent);
     color: #fff;
     border-color: var(--color-accent);
@@ -224,7 +224,7 @@
 }
 
 /* Right Column: Controls */
-.controls-column {
+.token-studio-app .controls-column {
     flex: 0 0 320px; /* Fixed width sidebar */
     display: flex;
     flex-direction: column;
@@ -233,14 +233,14 @@
 }
 
 /* Tabs */
-.tabs-nav {
+.token-studio-app .tabs-nav {
     display: flex;
     background: rgba(0,0,0,0.2);
     border-bottom: 1px solid var(--border-color);
     flex-shrink: 0;
 }
 
-.tabs-nav .item {
+.token-studio-app .tabs-nav .item {
     flex: 1;
     text-align: center;
     padding: 10px 0;
@@ -252,41 +252,41 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-.tabs-nav .item:hover { color: var(--color-text); background: rgba(255,255,255,0.02); }
-.tabs-nav .item.active {
+.token-studio-app .tabs-nav .item:hover { color: var(--color-text); background: rgba(255,255,255,0.02); }
+.token-studio-app .tabs-nav .item.active {
     color: var(--color-accent);
     border-bottom-color: var(--color-accent);
 }
-.tabs-nav .item i { margin-right: 6px; }
+.token-studio-app .tabs-nav .item i { margin-right: 6px; }
 
-.tab-content {
+.token-studio-app .tab-content {
     background: var(--color-bg);
     flex: 1; /* Take remaining height */
     overflow-y: auto; /* Scrollable content */
     padding: 0; 
 }
-.tab-content::-webkit-scrollbar { width: 6px; background: transparent; }
-.tab-content::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+.token-studio-app .tab-content::-webkit-scrollbar { width: 6px; background: transparent; }
+.token-studio-app .tab-content::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
 
-.tab {
+.token-studio-app .tab {
     display: none;
     padding: var(--spacing);
 }
-.tab.active { display: block; }
+.token-studio-app .tab.active { display: block; }
 
 /* Control Groups */
-.control-group {
+.token-studio-app .control-group {
     margin-bottom: 10px;
 }
-.control-group:last-child { margin-bottom: 0; }
+.token-studio-app .control-group:last-child { margin-bottom: 0; }
 
-.control-group.disabled {
+.token-studio-app .control-group.disabled {
     opacity: 0.4;
     pointer-events: none;
     filter: grayscale(1);
 }
 
-.control-group label {
+.token-studio-app .control-group label {
     display: block;
     margin-bottom: 4px;
     font-size: 10px;
@@ -297,20 +297,20 @@
 }
 
 /* Inputs & Sliders */
-.quick-token-studio input[type="range"] {
+.token-studio-app input[type="range"] {
     width: 100%;
     -webkit-appearance: none;
     appearance: none; 
     background: transparent;
     margin: 0;
 }
-.quick-token-studio input[type="range"]::-webkit-slider-runnable-track {
+.token-studio-app input[type="range"]::-webkit-slider-runnable-track {
     width: 100%;
     height: 4px;
     background: #444;
     border-radius: 2px;
 }
-.quick-token-studio input[type="range"]::-webkit-slider-thumb {
+.token-studio-app input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     height: 14px;
     width: 14px;
@@ -321,23 +321,23 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.5);
     transition: transform 0.1s;
 }
-.quick-token-studio input[type="range"]:active::-webkit-slider-thumb {
+.token-studio-app input[type="range"]:active::-webkit-slider-thumb {
     background: var(--color-accent);
     transform: scale(1.1);
 }
 
-.slider-row {
+.token-studio-app .slider-row {
     display: flex;
     align-items: center;
     gap: 8px;
     width: 100%;
 }
-.slider-row.full-width {
+.token-studio-app .slider-row.full-width {
     padding: 5px 0;
 }
 
 /* Numeric Value Input */
-.val-input {
+.token-studio-app .val-input {
     width: 50px;
     text-align: right;
     font-family: monospace;
@@ -349,25 +349,25 @@
     padding: 2px 4px;
     transition: all 0.2s;
 }
-.val-input:hover {
+.token-studio-app .val-input:hover {
     border-color: #444;
     background: rgba(0,0,0,0.2);
 }
-.val-input:focus {
+.token-studio-app .val-input:focus {
     border-color: var(--color-accent);
     background: #000;
     color: #fff;
     outline: none;
 }
 /* Hide arrows in number input */
-.val-input::-webkit-outer-spin-button,
-.val-input::-webkit-inner-spin-button {
+.token-studio-app .val-input::-webkit-outer-spin-button,
+.token-studio-app .val-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
 /* Labels containing inputs (header like) */
-.control-group label {
+.token-studio-app .control-group label {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -379,10 +379,10 @@
     letter-spacing: 0.5px;
 }
 
-.small-icon { color: #666; font-size: 10px; }
+.token-studio-app .small-icon { color: #666; font-size: 10px; }
 
 /* Info Tip (Replacement for Sliders) */
-.info-tip {
+.token-studio-app .info-tip {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -394,11 +394,11 @@
     border-radius: 6px;
     opacity: 0.7;
 }
-.info-tip i { font-size: 12px; }
-.info-tip small { font-size: 11px; }
+.token-studio-app .info-tip i { font-size: 12px; }
+.token-studio-app .info-tip small { font-size: 11px; }
 
 /* FX Grid (Compact Style Tab) */
-.fx-grid {
+.token-studio-app .fx-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 15px;
@@ -406,26 +406,26 @@
     align-items: end;
 }
 
-.color-row {
+.token-studio-app .color-row {
     display: flex;
     gap: 8px;
 }
-.color-row color-picker {
+.token-studio-app .color-row color-picker {
     flex: 1;
     height: 28px;
 }
 
 /* Frame Selector */
-.frame-selector {
+.token-studio-app .frame-selector {
     display: flex;
     gap: 6px;
     overflow-x: auto;
     padding-bottom: 4px;
 }
-.frame-selector::-webkit-scrollbar { height: 2px; }
-.frame-selector::-webkit-scrollbar-thumb { background: #444; }
+.token-studio-app .frame-selector::-webkit-scrollbar { height: 2px; }
+.token-studio-app .frame-selector::-webkit-scrollbar-thumb { background: #444; }
 
-.frame-item {
+.token-studio-app .frame-item {
     flex: 0 0 40px;
     height: 40px;
     border-radius: 50%; /* Circle frames look better in selector */
@@ -438,39 +438,39 @@
     justify-content: center;
     align-items: center;
 }
-.frame-item img {
+.token-studio-app .frame-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-.frame-item.remove-frame {
+.token-studio-app .frame-item.remove-frame {
     border: 1px dashed var(--color-border);
     color: var(--color-text-muted);
 }
-.frame-item.remove-frame:hover {
+.token-studio-app .frame-item.remove-frame:hover {
     color: #ff4444; /* Red for remove */
     border-color: #ff4444;
 }
 
-.frame-item.trash-can {
+.token-studio-app .frame-item.trash-can {
     border: 1px dashed var(--color-border);
     color: var(--color-text-muted);
 }
-.frame-item.trash-can.drag-hover {
+.token-studio-app .frame-item.trash-can.drag-hover {
     background: rgba(255, 0, 0, 0.2);
     border-color: #f00;
     color: #f00;
     transform: scale(1.1);
 }
 
-.frame-item.active {
+.token-studio-app .frame-item.active {
     border-color: var(--color-accent);
     box-shadow: 0 0 0 2px rgba(255,100,0,0.3);
     transform: scale(1.05);
 }
-.frame-item:hover { border-color: #666; }
+.token-studio-app .frame-item:hover { border-color: #666; }
 
-.add-frame {
+.token-studio-app .add-frame {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -478,16 +478,16 @@
     color: var(--color-text-muted);
     border-radius: 50%;
 }
-.add-frame:hover { color: var(--color-text); }
+.token-studio-app .add-frame:hover { color: var(--color-text); }
 
 
 
-.export-options {
+.token-studio-app .export-options {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
-.action-card {
+.token-studio-app .action-card {
     display: block;
     cursor: pointer;
     background: transparent;
@@ -497,11 +497,11 @@
     text-align: left;
     transition: transform 0.1s;
 }
-.action-card:active {
+.token-studio-app .action-card:active {
     transform: scale(0.98);
 }
 
-.card-content {
+.token-studio-app .card-content {
     background: transparent;
     border: none;
     padding: 0;
@@ -512,7 +512,7 @@
     height: 100%;
 }
 
-.btn-visual {
+.token-studio-app .btn-visual {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -526,32 +526,32 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-.action-card:hover .btn-visual {
+.token-studio-app .action-card:hover .btn-visual {
     background: var(--color-accent);
     color: #fff;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(255,100,0,0.3);
 }
 
-.btn-visual i { 
+.token-studio-app .btn-visual i { 
     font-size: 16px; 
     color: var(--color-accent);
     margin: 0;
     transition: color 0.2s; 
 }
-.action-card:hover .btn-visual i { color: #fff; }
+.token-studio-app .action-card:hover .btn-visual i { color: #fff; }
 
-.btn-visual span { 
+.token-studio-app .btn-visual span { 
     font-weight: 700; 
     font-size: 12px; 
     color: var(--color-text); 
     text-transform: uppercase;
 }
-.action-card:hover .btn-visual span { color: #fff; }
+.token-studio-app .action-card:hover .btn-visual span { color: #fff; }
 
 
 /* Save Button */
-.save-btn {
+.token-studio-app .save-btn {
     width: 100%;
     padding: 10px;
     background: var(--color-accent);
@@ -567,10 +567,10 @@
     gap: 8px;
     transition: background 0.2s;
 }
-.save-btn:hover { background: var(--color-accent-hover); }
+.token-studio-app .save-btn:hover { background: var(--color-accent-hover); }
 
 /* Checkbox Label */
-.checkbox-label {
+.token-studio-app .checkbox-label {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -580,7 +580,7 @@
 }
 
 /* Slot UI */
-.slot-group {
+.token-studio-app .slot-group {
     border: 1px solid var(--border-color);
     background: rgba(0,0,0,0.2);
     margin-bottom: 0.5rem;
@@ -588,12 +588,12 @@
     overflow: hidden;
 }
 
-.slot-group.active-slot {
+.token-studio-app .slot-group.active-slot {
     border-color: var(--primary-color);
     background: rgba(var(--primary-rgb), 0.05);
 }
 
-.slot-header {
+.token-studio-app .slot-header {
     padding: 0.5rem;
     background: rgba(0,0,0,0.3);
     cursor: pointer;
@@ -603,24 +603,24 @@
     gap: 0.5rem;
     user-select: none;
 }
-.slot-header:hover {
+.token-studio-app .slot-header:hover {
     background: rgba(255,255,255,0.05);
 }
 
-.slot-header input[type="radio"] {
+.token-studio-app .slot-header input[type="radio"] {
     margin: 0;
 }
 
-.slot-content {
+.token-studio-app .slot-content {
     padding: 0.5rem;
     border-top: 1px solid var(--border-color);
 }
 
-.slot-group.active-slot .slot-content {
+.token-studio-app .slot-group.active-slot .slot-content {
     display: block;
 }
 
-button[data-action="toggle-popout"].active {
+.token-studio-app button[data-action="toggle-popout"].active {
     background: var(--primary-color);
     color: white;
     border-color: var(--primary-light);
@@ -638,26 +638,26 @@ button[data-action="toggle-popout"].active {
 /*  New Tool Layout (Side-by-Side)           */
 /* ----------------------------------------- */
 
-.tools-grid {
+.token-studio-app .tools-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-bottom: 10px;
 }
 
-.tool-card {
+.token-studio-app .tool-card {
     background: rgba(0,0,0,0.2);
     border: 1px solid var(--border-color);
     border-radius: 6px;
     overflow: hidden;
     transition: all 0.2s;
 }
-.tool-card.active {
+.token-studio-app .tool-card.active {
     border-color: var(--color-accent);
     background: rgba(var(--primary-rgb), 0.05);
 }
 
-.tool-header {
+.token-studio-app .tool-header {
     padding: 8px;
     background: rgba(0,0,0,0.3);
     border-bottom: 1px solid var(--border-color);
@@ -669,12 +669,12 @@ button[data-action="toggle-popout"].active {
     align-items: center;
     color: var(--color-text-muted);
 }
-.tool-card.active .tool-header {
+.token-studio-app .tool-card.active .tool-header {
     color: var(--color-accent);
     border-bottom-color: var(--color-accent);
 }
 
-.tool-toggle {
+.token-studio-app .tool-toggle {
     background: #333;
     border: none;
     color: #888;
@@ -684,24 +684,24 @@ button[data-action="toggle-popout"].active {
     cursor: pointer;
     text-transform: uppercase;
 }
-.tool-toggle.active {
+.token-studio-app .tool-toggle.active {
     background: var(--color-accent);
     color: #fff;
 }
 
-.tool-body {
+.token-studio-app .tool-body {
     padding: 8px;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
-.tool-body.disabled {
+.token-studio-app .tool-body.disabled {
     opacity: 0.3;
     pointer-events: none;
     filter: grayscale(1);
 }
 
-.mode-switch {
+.token-studio-app .mode-switch {
     display: flex;
     background: #111;
     border-radius: 4px;
@@ -709,7 +709,7 @@ button[data-action="toggle-popout"].active {
     border: 1px solid #333;
 }
 
-.mode-btn {
+.token-studio-app .mode-btn {
     flex: 1;
     background: transparent;
     border: none;
@@ -719,34 +719,34 @@ button[data-action="toggle-popout"].active {
     transition: all 0.2s;
     font-size: 10px;
 }
-.mode-btn:hover { background: #222; color: #fff; }
-.mode-btn.active {
+.token-studio-app .mode-btn:hover { background: #222; color: #fff; }
+.token-studio-app .mode-btn.active {
     background: #444;
     color: #fff;
     box-shadow: inset 0 0 4px rgba(0,0,0,0.5);
 }
-.mode-btn i { font-size: 12px; }
+.token-studio-app .mode-btn i { font-size: 12px; }
 
-.btn-xs {
+.token-studio-app .btn-xs {
     padding: 4px;
     font-size: 10px;
     border-radius: 4px;
     cursor: pointer;
     border: 1px solid transparent;
 }
-.btn-xs.danger {
+.token-studio-app .btn-xs.danger {
     background: rgba(255, 0, 0, 0.1);
     color: #ff6666;
     border-color: #500;
 }
-.btn-xs.danger:hover {
+.token-studio-app .btn-xs.danger:hover {
     background: rgba(255, 0, 0, 0.3);
     color: #ffaaaa;
 }
 
 
 /* Layer Selector (Style Tab) */
-.btn-group-row {
+.token-studio-app .btn-group-row {
     display: flex;
     background: #111;
     border-radius: 4px;
@@ -755,7 +755,7 @@ button[data-action="toggle-popout"].active {
     margin-top: 5px;
 }
 
-.btn-layer {
+.token-studio-app .btn-layer {
     flex: 1;
     background: transparent;
     border: none;
@@ -770,19 +770,77 @@ button[data-action="toggle-popout"].active {
     gap: 6px;
     border-right: 1px solid #222;
 }
-.btn-layer:last-child { border-right: none; }
+.token-studio-app .btn-layer:last-child { border-right: none; }
 
-.btn-layer:hover {
+.token-studio-app .btn-layer:hover {
     background: #222;
     color: #eee;
 }
 
-.btn-layer.active {
+.token-studio-app .btn-layer.active {
     background: #444;
     color: #fff;
     box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
-.btn-layer i {
+.token-studio-app .btn-layer i {
     font-size: 10px;
 }
+
+
+/* ----------------------------------------- */
+/*  Profile Image Overlay Button             */
+/* ----------------------------------------- */
+
+.token-studio-profile-button {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 28px;
+    height: 28px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    color: #fff;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9999; /* Boosted to ensure it sits above frame borders/overlays */
+    opacity: 0.5; 
+    transition: opacity 0.2s, background 0.2s, transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    padding: 0;
+    pointer-events: all !important; /* Force clicks to register */
+}
+
+.token-studio-profile-button:hover {
+    background: var(--color-accent, #ff6400);
+    border-color: #fff;
+    opacity: 1 !important;
+    transform: scale(1.1);
+}
+
+.token-studio-profile-button i {
+    margin: 0; /* Override foundry defaults */
+    line-height: 1;
+}
+
+/* Class added to the container of the image to ensure positioning context */
+.token-studio-launch-target {
+    position: relative !important; 
+    display: inline-block; /* Ensure it wraps the image tightly but has structure */
+}
+
+/* Show button when hovering the container */
+.token-studio-launch-target:hover .token-studio-profile-button {
+    opacity: 1;
+}
+
+/* Ensure the button itself is clickable and doesn't flicker on hover */
+.token-studio-profile-button {
+    /* ... existing styles ... */
+    pointer-events: auto;
+}
+
 
