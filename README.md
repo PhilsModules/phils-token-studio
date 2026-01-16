@@ -60,6 +60,19 @@ _Der definitive Token-Editor für Foundry VTT._
 
 ---
 
+
+<br>
+
+<div align="center">
+<img src="https://github.com/PhilsModules/phils-token-studio/blob/main/preview.png" alt="Preview" width="800">
+</div>
+
+<br>
+
+<br>
+
+
+
 <br>
 
 # <img src="https://flagcdn.com/48x36/gb.png" width="28" height="21" alt="EN"> English Instructions
@@ -331,4 +344,5 @@ See `LICENSE` file for details.
     <br><br>
     <p><i>Made with ❤️ for the Foundry VTT Community</i></p>
 </div>
+
 
