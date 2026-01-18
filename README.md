@@ -40,7 +40,7 @@ _Der ultimative Tokeneditor für Foundry VTT._
 <br>
 
 <div align="center">
-<img src="https://github.com/PhilsModules/phils-token-studio/blob/main/preview.png" alt="Preview" width="800">
+<img src="https://github.com/PhilsModules/phils-token-studio/blob/main/pw.png" alt="Preview" width="800">
 </div>
 
 <br>
@@ -180,4 +180,5 @@ See `LICENSE` file for details.
     <br><br>
     <p><i>Made with ❤️ for the Foundry VTT Community</i></p>
 </div>
+
 
