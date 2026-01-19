@@ -1,4 +1,8 @@
-## v1.5.0 
+## v1.5.1
+
+- **Bugfix: Missing Button**: Fixed an issue where the "Open Token Studio" button would disappear after closing the window or re-rendering the character sheet (specifically reported in Twilight 2000, but affects all systems).
+
+## v1.5.0
 
 - **Feature: Smart Scaling**: Implemented size-based scaling logic.
   - "Small" creatures (0.8 Base Scale) are now correctly sized on the grid while maintaining high-resolution art.
@@ -14,9 +18,9 @@
 
 - **Bugfix: ReferenceError**: Fixed a crash (`step is not defined`) when using Undo/Redo or saving history in `token-studio.js`.
 - **Bugfix: Token Layer Painting**: Fixed an issue where painting on the Background and Frame layers in Token View was invisible or misaligned.
-- **Improvement: Layer Rendering Order**: 
-  - Token Character now draws *under* the Frame to prevent bleeding.
-  - Frame Paint now draws *over* everything to ensure visibility.
+- **Improvement: Layer Rendering Order**:
+  - Token Character now draws _under_ the Frame to prevent bleeding.
+  - Frame Paint now draws _over_ everything to ensure visibility.
 - **Refactor: Chroma Key**: Now applies to the active layer (Background, Character, Frame) instead of always the Portrait.
 - **Bugfix: Chroma UI**: Fixed the tolerance number display not syncing with the slider.
 - **Bugfix: Tool Toggles**: Activating Eraser or Pop-Out now correctly deactivates the Paint tool.
