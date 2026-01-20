@@ -1,3 +1,11 @@
+## v1.6.1
+
+- **Critical Fix (Daggerheart)**: Rewrote injection logic to ensure the Token Studio button appears instantly and reliably on Daggerheart sheets.
+- **Critical Fix (Tidy 5e)**: Resolved regression where the button was missing or non-functional on Tidy 5e sheets (DOM Sync & Fallback).
+- **Optimization**: Removed verbose debug logs.
+- **Performance**: Optimized button injection intervals for zero-latency appearance.
+- **Bugfix**: Fixed a syntax error in dragging logic.
+
 ## v1.6.0
 
 - **Feature (Global):** Dynamic Ring selection by the GM now updates the Global Core Setting and automatically reloads Foundry to apply changes.
