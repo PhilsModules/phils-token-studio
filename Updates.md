@@ -1,3 +1,21 @@
+## v1.6.0
+
+- **Feature (Global):** Dynamic Ring selection by the GM now updates the Global Core Setting and automatically reloads Foundry to apply changes.
+- **Feature (UI):** Enforced Tool Exclusivity. Enabling Chroma Key now disables Eraser/Paint/PopOut, and vice versa.
+- **Feature (Visuals):** Added a visual indicator for the brush size cursor.
+- **Feature (Visuals):** Added a transparent view mode for artwork.
+- **Improvement (UX):** Tools now context-check the active tab/layer for smoother switching.
+- **Chroma Key**: Moved tool position and refined logic for better usability.
+- **Fix:** Resolved "Clear All" persistence bug in Pop-Out tool.
+- **Fix:** "Save Token" now correctly persists Dynamic Ring selection.
+- **Localization:** Added translations for notifications and warning texts.
+- **Refactor: Visual Guide (Dynamic Ring)**: Perfect alignment with mask, solid white line style, and locked interaction.
+- **UI Polishing**: Improved slider visibility.
+
+## v1.5.2
+
+- **Feature: Tidy Sheets Integration**: Added full support for Tidy 5e Sheets. The "Token Studio" button now correctly appears in the "Toggle Controls" dropdown menu.
+
 ## v1.5.1
 
 - **Bugfix: Missing Button**: Fixed an issue where the "Open Token Studio" button would disappear after closing the window or re-rendering the character sheet (specifically reported in Twilight 2000, but affects all systems).
