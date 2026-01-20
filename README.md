@@ -19,6 +19,16 @@
 >
 > Es **WIRD** Fehler und unvollständige Funktionen enthalten. Die Nutzung erfolgt auf eigene Gefahr.
 
+Working Systems:
+Simple Worldbuilding,
+CY_BORG,
+Powered by the Apocalypse,
+Shadowdark,
+Dnd5e + Tidy,
+Pf2e,
+Daggerheart,
+Twilight 2000, and maybe many more... 
+
 <div align="center">
 
 <br>
@@ -180,6 +190,7 @@ See `LICENSE` file for details.
     <br><br>
     <p><i>Made with ❤️ for the Foundry VTT Community</i></p>
 </div>
+
 
 
 
