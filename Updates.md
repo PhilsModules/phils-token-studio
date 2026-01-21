@@ -1,3 +1,8 @@
+## v1.6.2
+
+- **Feature (Usage)**: **Select & Delete** Frames. You can now delete a custom frame by selecting it and then clicking the trash can icon.
+- **Improvement**: Added hover/active states to the trash can for better feedback.
+
 ## v1.6.1
 
 - **Critical Fix (Daggerheart)**: Rewrote injection logic to ensure the Token Studio button appears instantly and reliably on Daggerheart sheets.
