@@ -1,3 +1,9 @@
+## v1.6.3
+
+- **Bugfix (FilePicker)**: Fixed `FilePicker` deprecation warning and `offsetWidth` error for Foundry V13+ by implementing robust V13-compatible initialization.
+- **Bugfix (FilePicker)**: Fixed an issue where the FilePicker could open twice or trigger duplicate events.
+- **UI Improvement**: Changed the "Upload Portrait" button to **"Select Image"** with a folder icon, ensuring consistency with the Background selection UI.
+
 ## v1.6.2
 
 - **Feature (Usage)**: **Select & Delete** Frames. You can now delete a custom frame by selecting it and then clicking the trash can icon.
